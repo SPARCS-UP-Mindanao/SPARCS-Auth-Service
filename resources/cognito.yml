@@ -1,16 +1,85 @@
-CognitoUserPool:
-  Type: AWS::Cognito::UserPool
-  Properties:
-    UserPoolName: AuthServerUserPool
-    UsernameAttributes:
-      - email
-    AutoVerifiedAttributes:
-      - email
+Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: ${self:custom.projectName}-${self:custom.stage}-${self:custom.serviceName}-UserPool
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      AutoVerifiedAttributes:
+        - email
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: False
+      UsernameAttributes:
+        - email
+      MfaConfiguration: OFF
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: True
+          RequireNumbers: True
+          RequireSymbols: False
+          RequireUppercase: True
+          TemporaryPasswordValidityDays: 7
+      Schema:
+        - AttributeDataType: String
+          Mutable: true
+          Name: user_name
+          Required: false
+        - AttributeDataType: String
+          Mutable: true
+          Name: phone_number
+          Required: false
+      UsernameConfiguration:
+        CaseSensitive: False
 
-CognitoUserPoolClient:
-  Type: AWS::Cognito::UserPoolClient
-  Properties:
-    ClientName: AuthServerUserPoolClient
-    UserPoolId:
-      Ref: CognitoUserPool
-    GenerateSecret: false
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: ${self:custom.projectName}-${self:custom.stage}-${self:custom.serviceName}-UserPoolClient
+      AllowedOAuthFlows:
+        - code
+        - implicit
+      AllowedOAuthScopes:
+        - phone
+        - email
+        - openid
+        - profile
+        - aws.cognito.signin.user.admin
+      CallbackURLs:
+        - https://cognito.com
+      ExplicitAuthFlows:
+        - ALLOW_ADMIN_USER_PASSWORD_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      LogoutURLs:
+        - https://cognito.com
+      PreventUserExistenceErrors: ENABLED
+      UserPoolId: !Ref UserPool
+      SupportedIdentityProviders:
+        - COGNITO
+      GenerateSecret: True
+      RefreshTokenValidity: 180
+
+  UserPoolGroupAdministrator:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      Description: Administrator
+      GroupName: admin
+      Precedence: 0
+      UserPoolId: !Ref UserPool
+
+  UserPoolGroupPracticeManager:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      Description: Super Administrator
+      GroupName: super_admin
+      UserPoolId: !Ref UserPool
+
+  UserPoolGroupAdviser:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      Description: User
+      GroupName: user
+      UserPoolId: !Ref UserPool

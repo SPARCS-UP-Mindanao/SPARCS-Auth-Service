@@ -2,6 +2,8 @@ app:
   handler: main.handler
   environment:
     STAGE: ${self:provider.stage}
+    USER_POOL_ID: !Ref UserPool
+    USER_POOL_CLIENT_ID: !Ref UserPoolClient
   layers:
     - { Ref: PythonRequirementsLambdaLayer }
   events:
@@ -20,3 +22,8 @@ app:
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
       Resource: "*"
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+      Resource:
+        - arn:aws:ssm:*:*:parameter/sparcs-auth-secret-key-${self:custom.stage}

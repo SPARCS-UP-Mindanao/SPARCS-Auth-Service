@@ -1,9 +1,11 @@
-import lambdawarmer
 import os
+
+import lambdawarmer
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from controller.auth_controller import api_controller
 from mangum import Mangum
+
+from controller.auth_controller import api_controller
 
 STAGE = os.environ.get('STAGE')
 root_path = '/' if not STAGE else f'/{STAGE}'
