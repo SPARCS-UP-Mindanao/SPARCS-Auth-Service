@@ -1,0 +1,8 @@
+patterns:
+  - "src/**"
+  - "!requirements.txt"
+  - "!package.json"
+  - "!package-lock.json"
+  - "!.serverless/**"
+  - "!venv/**"
+  - "!node_modules/**"

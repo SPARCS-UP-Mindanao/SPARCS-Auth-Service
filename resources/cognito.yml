@@ -1,0 +1,16 @@
+CognitoUserPool:
+  Type: AWS::Cognito::UserPool
+  Properties:
+    UserPoolName: AuthServerUserPool
+    UsernameAttributes:
+      - email
+    AutoVerifiedAttributes:
+      - email
+
+CognitoUserPoolClient:
+  Type: AWS::Cognito::UserPoolClient
+  Properties:
+    ClientName: AuthServerUserPoolClient
+    UserPoolId:
+      Ref: CognitoUserPool
+    GenerateSecret: false
