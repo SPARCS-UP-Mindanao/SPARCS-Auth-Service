@@ -76,10 +76,3 @@ Resources:
       Description: Super Administrator
       GroupName: super_admin
       UserPoolId: !Ref UserPool
-
-  UserPoolGroupAdviser:
-    Type: AWS::Cognito::UserPoolGroup
-    Properties:
-      Description: User
-      GroupName: user
-      UserPoolId: !Ref UserPool

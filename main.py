@@ -8,7 +8,7 @@ from mangum import Mangum
 from controller.auth_controller import api_controller
 
 STAGE = os.environ.get('STAGE')
-root_path = '/' if not STAGE else f'/{STAGE}'
+root_path = f'/{STAGE}' if STAGE else '/'
 
 app = FastAPI(
     root_path=root_path,
@@ -25,10 +25,10 @@ def welcome():
     html_content = """
     <html>
         <head>
-            <title>Welcome to my Demo</title>
+            <title>Welcome to the SPARCS Auth API</title>
         </head>
         <body>
-            <h1>Welcome to my Demo</h1>
+            <h1>Welcome to the Auth API</h1>
         </body>
     </html>
     """
