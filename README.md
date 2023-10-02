@@ -59,3 +59,8 @@ npm install
 serverless deploy --stage 'dev' --aws-profile 'default'
 ```
 
+### Resources
+- https://fastapi.tiangolo.com/
+- https://www.serverless.com/framework/docs
+- https://react.dev/reference/react
+- https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
