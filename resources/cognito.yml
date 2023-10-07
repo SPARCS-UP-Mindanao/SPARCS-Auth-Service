@@ -76,3 +76,14 @@ Resources:
       Description: Super Administrator
       GroupName: super_admin
       UserPoolId: !Ref UserPool
+  
+Outputs:
+  UserPoolId:
+    Value: !Ref UserPool
+    Export:
+      Name: UserPoolId-${provider:stage}
+
+  AppClientId:
+    Value: !Ref UserPoolClient
+    Export:
+      Name: AppClientId-${provider:stage}
