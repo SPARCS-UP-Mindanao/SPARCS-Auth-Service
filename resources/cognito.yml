@@ -81,9 +81,9 @@ Outputs:
   UserPoolId:
     Value: !Ref UserPool
     Export:
-      Name: UserPoolId-${provider:stage}
+      Name: UserPoolId-${self:custom.stage}
 
   AppClientId:
     Value: !Ref UserPoolClient
     Export:
-      Name: AppClientId-${provider:stage}
+      Name: AppClientId-${self:custom.stage}
