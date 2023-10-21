@@ -76,7 +76,17 @@ Resources:
       Description: Super Administrator
       GroupName: super_admin
       UserPoolId: !Ref UserPool
-  
+
+  GatewayResponse:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters:
+        gatewayresponse.header.WWW-Authenticate: "'Basic'"
+      ResponseType: UNAUTHORIZED
+      RestApiId:
+        Ref: 'ApiGatewayRestApi'
+      StatusCode: '401'
+
 Outputs:
   UserPoolId:
     Value: !Ref UserPool
