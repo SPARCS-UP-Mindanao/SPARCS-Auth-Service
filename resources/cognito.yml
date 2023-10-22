@@ -97,3 +97,11 @@ Outputs:
     Value: !Ref UserPoolClient
     Export:
       Name: AppClientId-${self:custom.stage}
+
+  BasicAuthAuthorizerARN:
+    Value: 
+      Fn::GetAtt:
+        - BasicAuthAuthorizerLambdaFunction
+        - Arn
+    Export:
+      Name: BasicAuthAuthorizerARN-${self:custom.stage}
