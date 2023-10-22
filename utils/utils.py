@@ -1,10 +1,10 @@
-import os
 import base64
 import hashlib
 import hmac
+import logging
+import os
 
 from boto3.session import Session
-import logging
 
 
 class Utils:

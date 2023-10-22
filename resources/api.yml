@@ -1,3 +1,12 @@
+basicAuthAuthorizer:
+  handler: basic_auth.basic_auth_handler
+  timeout: 90
+  layers:
+    - Ref: PythonRequirementsLambdaLayer
+  environment:
+    USER_POOL_ID: !Ref UserPool
+    APP_CLIENT_ID: !Ref UserPoolClient
+
 app:
   handler: main.handler
   environment:
@@ -15,6 +24,18 @@ app:
         path: /{proxy+}
         method: any
         cors: true
+    - http:
+        path: /docs
+        method: get
+        authorizer:
+          name: basicAuthAuthorizer
+          type: token
+          identitySource: method.request.header.Authorization
+          identityValidationExpression: '^Basic\s(.+)$'
+          resultTtlInSeconds: 0
+        cors:
+          origins:
+            - "*"
   iamRoleStatements:
     - Effect: Allow
       Action:
