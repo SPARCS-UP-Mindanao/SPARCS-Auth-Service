@@ -99,7 +99,7 @@ Outputs:
       Name: AppClientId-${self:custom.stage}
 
   BasicAuthAuthorizerARN:
-    Value: 
+    Value:
       Fn::GetAtt:
         - BasicAuthAuthorizerLambdaFunction
         - Arn
