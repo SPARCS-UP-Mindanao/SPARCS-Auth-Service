@@ -2,8 +2,8 @@ import os
 
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from mangum import Mangum
 from lambda_decorators import cors_headers
+from mangum import Mangum
 
 from controller.auth_controller import api_controller
 
@@ -37,6 +37,7 @@ def welcome():
 
 api_controller(app)
 mangum_handler = Mangum(app, lifespan='off')
+
 
 @cors_headers
 def handler(event, context):
