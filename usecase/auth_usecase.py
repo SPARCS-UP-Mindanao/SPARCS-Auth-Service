@@ -112,14 +112,18 @@ class AuthUsecase:
                         },
                     )
 
+            access_token = auth_result.get('AccessToken')
+            user_info = self.client.get_user(AccessToken=access_token)
             auth_model = AuthResponse(
-                accessToken=auth_result.get('AccessToken'),
+                accessToken=access_token,
                 expiresIn=auth_result.get('ExpiresIn'),
                 tokenType=auth_result.get('TokenType'),
                 refreshToken=auth_result.get('RefreshToken'),
                 idToken=auth_result.get('IdToken'),
                 session=session,
+                sub=user_info.get('Username'),
             )
+
             auth_model_dict = auth_model.dict(exclude_none=True, exclude_unset=True)
             auth_response = JSONResponse(status_code=HTTPStatus.OK, content=auth_model_dict)
             auth_response.set_cookie(
