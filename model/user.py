@@ -56,7 +56,7 @@ class AuthResponse(BaseModel):
     tokenType: str = Field(..., title="Token Type")
     refreshToken: Optional[str] = Field(None, title="Refresh Token")
     idToken: str = Field(..., title="Id Token")
-    session: Optional[str] = Field(..., title="Session")
+    session: Optional[str] = Field(None, title="Session")
     sub: str = Field(..., title="Sub", description="The unique identifier for the user.")
 
 

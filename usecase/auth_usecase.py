@@ -174,6 +174,7 @@ class AuthUsecase:
                 tokenType=auth_result.get('TokenType'),
                 refreshToken=auth_result.get('RefreshToken'),
                 idToken=auth_result.get('IdToken'),
+                sub=username
             )
             auth_model_dict = auth_model.dict(exclude_none=True, exclude_unset=True)
             auth_response = JSONResponse(status_code=HTTPStatus.OK, content=auth_model_dict)
