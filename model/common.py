@@ -7,6 +7,6 @@ class Message(BaseModel):
     message: str
 
 
-class BasicAuthCredentials(Enum):
+class BasicAuthCredentials(str, Enum):
     username: str = 'sparcs'
     password: str = 'sparcs_events_123!'

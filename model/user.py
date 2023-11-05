@@ -1,13 +1,13 @@
 from typing import Optional
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, EmailStr, Extra, Field
 
 
 class SignUp(BaseModel):
     class Config:
         extra = Extra.forbid
 
-    email: str = Field(..., title="Email")
+    email: EmailStr = Field(..., title="Email")
     password: str = Field(..., title="Password")
 
 
@@ -15,7 +15,7 @@ class SignUpResponse(BaseModel):
     class Config:
         extra = Extra.ignore
 
-    email: str = Field(..., title="Email")
+    email: EmailStr = Field(..., title="Email")
     sub: str = Field(..., title="Sub", description="The unique identifier for the user.")
 
 
@@ -23,7 +23,7 @@ class ConfirmSignUp(BaseModel):
     class Config:
         extra = Extra.forbid
 
-    email: str = Field(..., title="Email")
+    email: EmailStr = Field(..., title="Email")
     confirmationCode: str = Field(..., title="Confirmation Code")
 
 
@@ -64,7 +64,7 @@ class ForgotPasswordRequest(BaseModel):
     class Config:
         extra = Extra.forbid
 
-    email: str = Field(..., title="Email")
+    email: EmailStr = Field(..., title="Email")
 
 
 class ConfirmForgotPasswordRequest(SignUp):
@@ -83,20 +83,13 @@ class ChangePasswordRequest(BaseModel):
     proposedPassword: str = Field(..., title="Proposed Password")
 
 
-class InviteAdminRequest(BaseModel):
+class UpdateTemporaryPasswordRequest(BaseModel):
     class Config:
         extra = Extra.forbid
 
-    email: str = Field(..., title="Email")
-
-
-class UpdateTemporaryPasswordRequest(SignUp):
-    class Config:
-        extra = Extra.forbid
-
-    email: str = Field(..., title="Email")
-    password: str = Field(..., title="Password")
-    session: str = Field(..., title="SessionId")
+    email: EmailStr = Field(..., title="Email")
+    prevPassword: str = Field(..., title="Previous Password")
+    newPassword: str = Field(..., title="Password")
 
 
 class Challenge(BaseModel):

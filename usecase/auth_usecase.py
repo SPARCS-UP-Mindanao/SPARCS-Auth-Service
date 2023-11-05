@@ -1,24 +1,26 @@
 import logging
 import os
 from http import HTTPStatus
+from typing import Union
 
 from boto3 import client as boto3_client
 from starlette.responses import JSONResponse
 
 from constants.common_constants import CommonConstants, UserRoles
+from model.admins.admin import AdminIn, AdminPatch
 from model.user import (
     AuthResponse,
     Challenge,
     ChangePasswordRequest,
     ConfirmForgotPasswordRequest,
     ConfirmSignUp,
-    InviteAdminRequest,
     Login,
     RefreshTokenRequest,
     SignUp,
     SignUpResponse,
     UpdateTemporaryPasswordRequest,
 )
+from usecase.admin_usecase import AdminUseCase
 from utils.utils import Utils
 
 
@@ -28,6 +30,7 @@ class AuthUsecase:
         self.user_pool_id = os.getenv('USER_POOL_ID')
         self.user_pool_client_id = os.getenv('USER_POOL_CLIENT_ID')
         self.client_secret = Utils.get_secret(os.getenv('CLIENT_SECRET_NAME'))
+        self.admin_uc = AdminUseCase()
 
     def signup(self, sign_up_details: SignUp):
         try:
@@ -174,7 +177,7 @@ class AuthUsecase:
                 tokenType=auth_result.get('TokenType'),
                 refreshToken=auth_result.get('RefreshToken'),
                 idToken=auth_result.get('IdToken'),
-                sub=username
+                sub=username,
             )
             auth_model_dict = auth_model.dict(exclude_none=True, exclude_unset=True)
             auth_response = JSONResponse(status_code=HTTPStatus.OK, content=auth_model_dict)
@@ -303,30 +306,30 @@ class AuthUsecase:
         else:
             return response
 
-    def invite_admin(self, invite_admin: InviteAdminRequest):
-        if os.getenv('CURRENT_USER_IS_ADMIN', '') != 'True':
-            return JSONResponse(
-                status_code=HTTPStatus.UNAUTHORIZED,
-                content={
-                    "message": "Unauthorized",
-                },
-            )
-
+    def invite_admin(self, invite_admin: AdminIn):
         try:
             username = invite_admin.email
             user = self.get_user(username)
             if user is None:
-                self.client.admin_create_user(
+                created_user = self.client.admin_create_user(
                     UserPoolId=self.user_pool_id,
                     Username=username,
                     TemporaryPassword=CommonConstants.TEMPORARY_PASSWORD,
                     ForceAliasCreation=False,
                     DesiredDeliveryMediums=['EMAIL'],
                 )
+                user = created_user.get('User')
 
             self.client.admin_add_user_to_group(
                 UserPoolId=self.user_pool_id, Username=username, GroupName=UserRoles.ADMIN.value
             )
+
+            # create a new admin
+            sub = user.get('Username')
+            created_admin = self.admin_uc.create_admin(admin_in=invite_admin, sub=sub)
+            if isinstance(created_admin, JSONResponse):
+                return created_admin
+
         except Exception as e:
             err_msg = str(e)
             logging.error(err_msg)
@@ -342,13 +345,28 @@ class AuthUsecase:
 
     def update_temp_password(self, update_temp_password: UpdateTemporaryPasswordRequest):
         try:
+            response = self.login(
+                login_details=Login(
+                    email=update_temp_password.email,
+                    password=update_temp_password.prevPassword,
+                )
+            )
+            if not isinstance(response, Challenge):
+                return JSONResponse(
+                    status_code=HTTPStatus.BAD_REQUEST,
+                    content={
+                        "message": "Invalid credentials",
+                    },
+                )
+
+            session = response.session
             self.client.respond_to_auth_challenge(
                 ClientId=self.user_pool_client_id,
                 ChallengeName='NEW_PASSWORD_REQUIRED',
-                Session=update_temp_password.session,
+                Session=session,
                 ChallengeResponses={
                     'USERNAME': update_temp_password.email,
-                    'NEW_PASSWORD': update_temp_password.password,
+                    'NEW_PASSWORD': update_temp_password.newPassword,
                     'SECRET_HASH': Utils.compute_secret_hash(
                         client_secret=self.client_secret,
                         user_name=update_temp_password.email,
@@ -356,6 +374,14 @@ class AuthUsecase:
                     ),
                 },
             )
+
+            user = self.get_user(update_temp_password.email)
+            sub = user.get('Username')
+            self.admin_uc.update_admin(
+                admin_id=sub,
+                admin_in=AdminPatch(isConfirmed=True),
+            )
+
         except Exception as e:
             err_msg = str(e)
             logging.error(err_msg)
@@ -368,3 +394,14 @@ class AuthUsecase:
                     "message": "Password Changed Successfully",
                 },
             )
+
+    def delete_admin(self, admin_id: str) -> Union[None, JSONResponse]:
+        try:
+            self.client.admin_delete_user(UserPoolId=self.user_pool_id, Username=admin_id)
+            return self.admin_uc.delete_admin(admin_id=admin_id)
+
+        except Exception as e:
+            err_msg = str(e)
+            logging.error(err_msg)
+            message = Utils.strip_error_message(err_msg)
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
