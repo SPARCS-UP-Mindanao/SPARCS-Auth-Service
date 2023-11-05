@@ -4,6 +4,7 @@ custom:
   projectName: sparcs-events
   serviceName: auth
   stage: ${opt:stage, self:provider.stage}
+  entities: ${self:custom.stage}-${self:custom.projectName}-entities
   pythonRequirements:
     dockerizePip: true
     layer:
@@ -31,6 +32,7 @@ provider:
   environment:
     REGION: ${self:provider.region}
     STAGE: ${self:custom.stage}
+    ENTITIES_TABLE: ${self:custom.entities}
     CLIENT_SECRET_NAME: sparcs-auth-secret-key-${self:custom.stage}
   logs:
     restApi: true
