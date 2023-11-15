@@ -1,29 +1,39 @@
 service: sparcs-auth-service
 
 custom:
+  projectName: sparcs-events
+  serviceName: auth
+  stage: ${opt:stage, self:provider.stage}
+  entities: ${self:custom.stage}-${self:custom.projectName}-entities
   pythonRequirements:
     dockerizePip: true
     layer:
-      name: pwa-sls-${self:provider.stage}-python-requirements
+      name: sparcs-auth-${self:provider.stage}-python-requirements
       path: .
       compatibleRuntimes:
         - python3.8
-  stage: ${opt:stage, self:provider.stage}
 
-package:
-  - ${file(resources/package.yml)}
+package: ${file(resources/package.yml)}
 
 provider:
   name: aws
   runtime: python3.8
   stage: dev
   region: ap-southeast-1
-  memorySize: 3008
+  memorySize: 256
   versionFunctions: false
   timeout: 30
+  apiGateway:
+    resourcePolicy:
+      - Effect: Allow
+        Action: execute-api:Invoke
+        Principal: "*"
+        Resource: execute-api:/*/*/*
   environment:
     REGION: ${self:provider.region}
     STAGE: ${self:custom.stage}
+    ENTITIES_TABLE: ${self:custom.entities}
+    CLIENT_SECRET_NAME: sparcs-auth-secret-key-${self:custom.stage}
   logs:
     restApi: true
 

@@ -1,7 +1,18 @@
+basicAuthAuthorizer:
+  handler: basic_auth.basic_auth_handler
+  timeout: 90
+  layers:
+    - Ref: PythonRequirementsLambdaLayer
+  environment:
+    USER_POOL_ID: !Ref UserPool
+    APP_CLIENT_ID: !Ref UserPoolClient
+
 app:
   handler: main.handler
   environment:
     STAGE: ${self:provider.stage}
+    USER_POOL_ID: !Ref UserPool
+    USER_POOL_CLIENT_ID: !Ref UserPoolClient
   layers:
     - { Ref: PythonRequirementsLambdaLayer }
   events:
@@ -13,6 +24,18 @@ app:
         path: /{proxy+}
         method: any
         cors: true
+    - http:
+        path: /docs
+        method: get
+        authorizer:
+          name: basicAuthAuthorizer
+          type: token
+          identitySource: method.request.header.Authorization
+          identityValidationExpression: '^Basic\s(.+)$'
+          resultTtlInSeconds: 0
+        cors:
+          origins:
+            - "*"
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -20,3 +43,8 @@ app:
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
       Resource: "*"
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+      Resource:
+        - arn:aws:ssm:*:*:parameter/sparcs-auth-secret-key-${self:custom.stage}
