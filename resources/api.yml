@@ -10,7 +10,7 @@ basicAuthAuthorizer:
 app:
   handler: main.handler
   environment:
-    STAGE: ${self:provider.stage}
+    STAGE: ${self:custom.stage}
     USER_POOL_ID: !Ref UserPool
     USER_POOL_CLIENT_ID: !Ref UserPoolClient
   layers:

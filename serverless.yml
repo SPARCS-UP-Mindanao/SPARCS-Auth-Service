@@ -8,7 +8,7 @@ custom:
   pythonRequirements:
     dockerizePip: true
     layer:
-      name: sparcs-auth-${self:provider.stage}-python-requirements
+      name: sparcs-auth-${self:custom.stage}-python-requirements
       path: .
       compatibleRuntimes:
         - python3.8
