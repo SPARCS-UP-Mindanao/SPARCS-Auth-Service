@@ -48,7 +48,7 @@ app:
         - ssm:GetParameter
       Resource:
         - arn:aws:ssm:*:*:parameter/sparcs-auth-secret-key-${self:custom.stage}
-      - Effect: Allow
+    - Effect: Allow
       Action:
         - dynamodb:*
       Resource:
