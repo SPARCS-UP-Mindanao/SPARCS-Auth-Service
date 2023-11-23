@@ -6,12 +6,16 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   entities: ${self:custom.stage}-${self:custom.projectName}-entities
   pythonRequirements:
-    dockerizePip: true
+    dockerizePip: non-linux
+    noDeploy:
+      - requests
+      - boto3
+      - botocore
     layer:
       name: sparcs-auth-${self:custom.stage}-python-requirements
-      path: .
       compatibleRuntimes:
         - python3.8
+    slim: true
 
 package: ${file(resources/package.yml)}
 
