@@ -6,6 +6,7 @@ from typing import Tuple
 
 import ulid
 from boto3 import client as boto3_client
+
 from model.email.email import EmailIn
 from utils.logger import logger
 
@@ -46,8 +47,7 @@ class EmailUsecase:
         salutation = "Good day,"
         body = [
             'You are invited to be an Admin of TechTix. Below are your temporary credentials:',
-            f'Link: {frontend_url}/admin/login'
-            f'Email: {email}',
+            f'Link: {frontend_url}/admin/login' f'Email: {email}',
             f'Password: {temp_password}',
             'Please change your password after logging in.',
             'Thank you!',

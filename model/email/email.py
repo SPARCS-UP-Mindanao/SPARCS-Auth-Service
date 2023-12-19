@@ -1,7 +1,8 @@
 from typing import List, Optional
 
-from constants.common_constants import EmailType
 from pydantic import BaseModel, EmailStr, Field
+
+from constants.common_constants import EmailType
 
 
 class EmailIn(BaseModel):
