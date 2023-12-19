@@ -53,4 +53,8 @@ app:
         - dynamodb:*
       Resource:
         - arn:aws:dynamodb:ap-southeast-1:192218445313:table/${self:custom.stage}-sparcs-events-entities
-
+    - Effect: Allow
+      Action:
+        - "sqs:*"
+      Resource:
+        - arn:aws:sqs:ap-southeast-1:192218445313:${self:custom.stage}-sparcs-events-email-queue.fifo

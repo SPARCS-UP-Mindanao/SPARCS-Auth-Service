@@ -1,10 +1,10 @@
 import os
 from datetime import datetime
 
-from model.entities import Entities
 from pydantic import BaseModel, EmailStr, Extra, Field
-from pynamodb.attributes import UnicodeAttribute, BooleanAttribute
+from pynamodb.attributes import BooleanAttribute, UnicodeAttribute
 
+from model.entities import Entities
 
 
 class Admin(Entities, discriminator='Admin'):
