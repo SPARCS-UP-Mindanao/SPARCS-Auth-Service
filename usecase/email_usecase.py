@@ -49,7 +49,7 @@ class EmailUsecase:
             'You are invited to be an Admin of TechTix. Below are your temporary credentials:',
             f'Link: {frontend_url}/admin/login',
             f'Email: {email}',
-            f'Password: {temp_password}',
+            f'Temporary Password: {temp_password}',
             'Please change your password after logging in.',
             'Thank you!',
         ]

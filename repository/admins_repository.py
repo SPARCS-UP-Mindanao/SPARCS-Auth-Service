@@ -176,7 +176,6 @@ class AdminsRepository:
                 # check if there's update or none
                 updated_data.update(
                     updateDate=self.current_date,
-                    updatedBy=os.getenv('CURRENT_USER'),
                     latestVersion=new_version,
                 )
                 actions = [getattr(Admin, k).set(v) for k, v in updated_data.items()]

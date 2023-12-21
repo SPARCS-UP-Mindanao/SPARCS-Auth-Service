@@ -43,6 +43,7 @@ app:
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
         - cognito-idp:AdminAddUserToGroup
+        - cognito-idp:AdminGetUser
       Resource: "*"
     - Effect: Allow
       Action:

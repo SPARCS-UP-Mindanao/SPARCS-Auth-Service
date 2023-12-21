@@ -25,5 +25,5 @@ class Entities(Model):
 
     createDate = UnicodeAttribute(null=False)
     updateDate = UnicodeAttribute(null=False)
-    createdBy = UnicodeAttribute(null=False)
-    updatedBy = UnicodeAttribute(null=False)
+    createdBy = UnicodeAttribute(null=True)
+    updatedBy = UnicodeAttribute(null=True)
