@@ -2,9 +2,10 @@ import json
 from http import HTTPStatus
 from typing import List, Union
 
+from starlette.responses import JSONResponse
+
 from model.admins.admin import AdminIn, AdminOut
 from repository.admins_repository import AdminsRepository
-from starlette.responses import JSONResponse
 
 
 class AdminUseCase:

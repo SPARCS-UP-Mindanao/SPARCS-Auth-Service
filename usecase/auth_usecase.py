@@ -21,6 +21,7 @@ from model.user import (
     UpdateTemporaryPasswordRequest,
 )
 from usecase.admin_usecase import AdminUseCase
+from usecase.email_usecase import EmailUsecase
 from utils.utils import Utils
 
 
@@ -30,6 +31,7 @@ class AuthUsecase:
         self.user_pool_id = os.getenv('USER_POOL_ID')
         self.user_pool_client_id = os.getenv('USER_POOL_CLIENT_ID')
         self.client_secret = Utils.get_secret(os.getenv('CLIENT_SECRET_NAME'))
+        self.email_uc = EmailUsecase()
         self.admin_uc = AdminUseCase()
 
     def signup(self, sign_up_details: SignUp):
@@ -316,7 +318,7 @@ class AuthUsecase:
                     Username=username,
                     TemporaryPassword=CommonConstants.TEMPORARY_PASSWORD,
                     ForceAliasCreation=False,
-                    DesiredDeliveryMediums=['EMAIL'],
+                    MessageAction='SUPPRESS',
                 )
                 user = created_user.get('User')
 
@@ -329,6 +331,12 @@ class AuthUsecase:
             created_admin = self.admin_uc.create_admin(admin_in=invite_admin, sub=sub)
             if isinstance(created_admin, JSONResponse):
                 return created_admin
+
+            # send email
+            self.email_uc.send_admin_invitation_email(
+                email=username,
+                temp_password=CommonConstants.TEMPORARY_PASSWORD,
+            )
 
         except Exception as e:
             err_msg = str(e)

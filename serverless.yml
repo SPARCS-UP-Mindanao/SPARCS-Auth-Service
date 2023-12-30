@@ -5,6 +5,11 @@ custom:
   serviceName: auth
   stage: ${opt:stage, self:provider.stage}
   entities: ${self:custom.stage}-${self:custom.projectName}-entities
+  emailQueue:
+    !ImportValue EmailQueue-${self:custom.stage}
+  frontendUrl:
+    dev: https://sparcs-event-platform-git-stage-sparcss-projects.vercel.app
+    prod: https://www.techtix.app
   pythonRequirements:
     dockerizePip: non-linux
     noDeploy:
@@ -38,6 +43,8 @@ provider:
     STAGE: ${self:custom.stage}
     ENTITIES_TABLE: ${self:custom.entities}
     CLIENT_SECRET_NAME: sparcs-auth-secret-key-${self:custom.stage}
+    EMAIL_QUEUE: ${self:custom.emailQueue}
+    FRONTEND_URL: ${self:custom.frontendUrl.${self:custom.stage}}
   logs:
     restApi: true
 

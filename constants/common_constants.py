@@ -29,6 +29,7 @@ class CommonConstants:
 
     ENTRY_ID = 'entryId'
     EVENT_ID = 'eventId'
+    ADMIN_ID = 'adminId'
     REGISTRATION_ID = 'registrationId'
 
     # Exclude to Comparison Keys
@@ -44,3 +45,10 @@ class CommonConstants:
         UPDATED_BY,
         LATEST_VERSION,
     ]
+
+
+class EmailType(str, Enum):
+    REGISTRATION_EMAIL = 'registrationEmail'
+    CONFIRMATION_EMAIL = 'confirmationEmail'
+    EVALUATION_EMAIL = 'evaluationEmail'
+    EVENT_CREATION_EMAIL = 'eventCreationEmail'
