@@ -44,6 +44,7 @@ app:
         - cognito-idp:AdminSetUserPassword
         - cognito-idp:AdminAddUserToGroup
         - cognito-idp:AdminGetUser
+        - cognito-idp:AdminDeleteUser
       Resource: "*"
     - Effect: Allow
       Action:
