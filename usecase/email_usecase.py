@@ -47,7 +47,7 @@ class EmailUsecase:
         salutation = "Good day,"
         body = [
             'You are invited to be an Admin of TechTix. Below are your temporary credentials:',
-            f'Link: {frontend_url}/admin/login',
+            f'Link: {frontend_url}/admin/update-password',
             f'Email: {email}',
             f'Temporary Password: {temp_password}',
             'Please change your password after logging in.',
