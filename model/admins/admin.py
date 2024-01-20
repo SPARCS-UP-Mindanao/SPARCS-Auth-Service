@@ -1,10 +1,10 @@
 import os
 from datetime import datetime
 
-from model.entities import Entities
 from pydantic import BaseModel, EmailStr, Extra, Field
-from pynamodb.attributes import UnicodeAttribute, BooleanAttribute
+from pynamodb.attributes import BooleanAttribute, UnicodeAttribute
 
+from model.entities import Entities
 
 
 class Admin(Entities, discriminator='Admin'):
@@ -88,6 +88,6 @@ class AdminOut(AdminIn):
     entryId: str = Field(..., title="ID")
     createDate: datetime = Field(..., title="Created At")
     updateDate: datetime = Field(..., title="Updated At")
-    createdBy: str = Field(..., title="Created By")
-    updatedBy: str = Field(..., title="Updated By")
+    createdBy: str = Field(None, title="Created By")
+    updatedBy: str = Field(None, title="Updated By")
     isConfirmed: bool = Field(default=False, title="Is Confirmed")

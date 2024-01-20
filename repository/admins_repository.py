@@ -6,8 +6,6 @@ from http import HTTPStatus
 from typing import List, Tuple
 
 import ulid
-from constants.common_constants import EntryStatus
-from model.admins.admin import Admin, AdminIn
 from pynamodb.connection import Connection
 from pynamodb.exceptions import (
     DeleteError,
@@ -18,6 +16,9 @@ from pynamodb.exceptions import (
     TransactWriteError,
 )
 from pynamodb.transactions import TransactWrite
+
+from constants.common_constants import EntryStatus
+from model.admins.admin import Admin, AdminIn
 from repository.repository_utils import RepositoryUtils
 
 
@@ -121,9 +122,7 @@ class AdminsRepository:
                 return HTTPStatus.NOT_FOUND, None, message
 
         except QueryError as e:
-            return self._extracted_from_query_admins_37(
-                'Failed to query admin: ', e, admin_id
-            )
+            return self._extracted_from_query_admins_37('Failed to query admin: ', e, admin_id)
         except TableDoesNotExist as db_error:
             return self._extracted_from_query_admins_37(
                 'Error on Table, Please check config to make sure table is created: ',
@@ -177,7 +176,6 @@ class AdminsRepository:
                 # check if there's update or none
                 updated_data.update(
                     updateDate=self.current_date,
-                    updatedBy=os.getenv('CURRENT_USER'),
                     latestVersion=new_version,
                 )
                 actions = [getattr(Admin, k).set(v) for k, v in updated_data.items()]
