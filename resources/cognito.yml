@@ -49,6 +49,7 @@ Resources:
         - aws.cognito.signin.user.admin
       CallbackURLs:
         - https://cognito.com
+        - http://localhost:5173
       ExplicitAuthFlows:
         - ALLOW_ADMIN_USER_PASSWORD_AUTH
         - ALLOW_USER_PASSWORD_AUTH
@@ -57,8 +58,12 @@ Resources:
         - https://cognito.com
       PreventUserExistenceErrors: ENABLED
       UserPoolId: !Ref UserPool
+      AllowedOAuthFlowsUserPoolClient: True
       SupportedIdentityProviders:
         - COGNITO
+        - MicrosoftOIDC
+        - Google
+        # - SignInWithApple
       GenerateSecret: True
       RefreshTokenValidity: 180
 
@@ -76,6 +81,59 @@ Resources:
       Description: Super Administrator
       GroupName: super_admin
       UserPoolId: !Ref UserPool
+
+  UserPoolDomain: 
+    Type: AWS::Cognito::UserPoolDomain 
+    Properties:
+      UserPoolId: !Ref UserPool 
+      Domain: "techtix"
+
+  MicrosoftUserPoolIdentityProvider:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Properties:
+      UserPoolId: !Ref UserPool
+      ProviderName: "MicrosoftOIDC"
+      ProviderType: "OIDC"
+      ProviderDetails:
+        client_id: ${ssm:${self:custom.azureADClientId}}
+        client_secret: ${ssm:${self:custom.azureADClientSecret}}
+        authorize_scopes: "openid profile email"
+        oidc_issuer: https://login.microsoftonline.com/${ssm:${self:custom.azureADTenantId}}/v2.0
+        authorize_url: https://login.microsoftonline.com/${ssm:${self:custom.azureADTenantId}}/oauth2/v2.0/authorize
+        token_url: https://login.microsoftonline.com/${ssm:${self:custom.azureADTenantId}}/oauth2/v2.0/token
+        attributes_request_method: "POST"
+        jwks_uri: https://login.microsoftonline.com/${ssm:${self:custom.azureADTenantId}}/discovery/v2.0/keys
+      AttributeMapping:
+        email: "email"
+        username: "sub"
+
+  GoogleUserPoolIdentityProvider:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Properties:
+      UserPoolId: !Ref UserPool
+      ProviderName: "Google"
+      ProviderDetails:
+        client_id: ${ssm:${self:custom.gcpOAuthClientId}}
+        client_secret: ${ssm:${self:custom.gcpOAuthClientSecret}}
+        authorize_scopes: "profile email openid"
+      ProviderType: "Google"
+      AttributeMapping:
+        email: "email"
+
+  # AppleUserPoolIdentityProvider:
+  #   Type: AWS::Cognito::UserPoolIdentityProvider
+  #   Properties:
+  #     UserPoolId: !Ref UserPool
+  #     ProviderName: "SignInWithApple"
+  #     ProviderDetails:
+  #       client_id: "YourSign"
+  #       team_id: "YourAppleTeamId"
+  #       key_id: "YourApplePrivateKeyID"
+  #       private_key: "YourApplePrivateKey"
+  #       authorize_scopes: "public_profile,email"
+  #     ProviderType: "SignInWithApple"
+  #     AttributeMapping:
+  #       email: "email"
 
   GatewayResponse:
     Type: 'AWS::ApiGateway::GatewayResponse'

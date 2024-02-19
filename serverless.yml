@@ -7,6 +7,11 @@ custom:
   entities: ${self:custom.stage}-${self:custom.projectName}-entities
   emailQueue:
     !ImportValue EmailQueue-${self:custom.stage}
+  azureADTenantId: ${self:custom.stage}-azure-ad-tenant-id
+  azureADClientId: ${self:custom.stage}-azure-ad-client-id
+  azureADClientSecret: ${self:custom.stage}-azure-ad-client-secret
+  gcpOAuthClientId: ${self:custom.stage}-gcp-oath-client-id
+  gcpOAuthClientSecret: ${self:custom.stage}-gcp-oath-client-secret
   frontendUrl:
     dev: https://sparcs-event-platform-git-stage-sparcss-projects.vercel.app
     prod: https://www.techtix.app
