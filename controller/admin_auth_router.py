@@ -133,16 +133,16 @@ def get_admins(
     """
     Get a list of all admins in the current database.
 
-    Parameters:
-    - current_user (AccessUser): The currently authenticated user.
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
 
-    Returns:
-    - List[AdminOut]: A list of admin records.
+    :return: A list of admin records, otherwise an error message for unauthorized access.
+    :rtype: List[AdminOut] or JSONResponse
 
-    Responses:
-    - 200: List of admins retrieved successfully
-    - 404: Admin not found
-    - 500: Internal server error
+    :responses:
+        - 200: List of admins retrieved successfully
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
     if os.getenv("CURRENT_USER_IS_ADMIN") != "True":
@@ -178,17 +178,19 @@ def get_admin(
     """
     Get details of a single admin from the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to retrieve.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to retrieve.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Details of the admin.
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
 
-    Responses:
-    - 200: Admin retrieved successfully
-    - 404: Admin not found
-    - 500: Internal server error
+    :return: The details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin retrieved successfully
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
     if os.getenv("CURRENT_USER_IS_ADMIN") != "True":
@@ -226,19 +228,23 @@ def update_admin(
     """
     Update an admin's details in the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to update.
-    - admin (AdminIn): New details for the admin.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to update.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Updated details of the admin.
+    :param admin: New details for the admin.
+    :type admin: AdminIn
 
-    Responses:
-    - 200: Admin updated successfully
-    - 400: Bad request
-    - 404: Admin not found
-    - 500: Internal server error
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: Updated details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin updated successfully
+        - 400: Bad request
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
     if os.getenv("CURRENT_USER_IS_ADMIN") != "True":
@@ -271,19 +277,23 @@ def delete_admin(
     """
     Update an admin's details in the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to update.
-    - admin (AdminIn): New details for the admin.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to update.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Updated details of the admin.
+    :param admin: New details for the admin.
+    :type admin: AdminIn
 
-    Responses:
-    - 200: Admin updated successfully
-    - 400: Bad request
-    - 404: Admin not found
-    - 500: Internal server error
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: Updated details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin updated successfully
+        - 400: Bad request
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
     if os.getenv("CURRENT_USER_IS_ADMIN") != "True":

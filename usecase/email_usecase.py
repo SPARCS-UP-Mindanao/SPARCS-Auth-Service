@@ -13,6 +13,9 @@ from utils.logger import logger
 
 class EmailUsecase:
     def __init__(self) -> None:
+        """
+        Initialize the EmailUsecase with an instance of the SQS client and the SQS URL.
+        """
         self.__sqs_client = boto3_client(
             "sqs", region_name=os.getenv("REGION", "ap-southeast-1")
         )
