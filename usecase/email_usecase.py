@@ -16,9 +16,7 @@ class EmailUsecase:
         """
         Initialize the EmailUsecase with an instance of the SQS client and the SQS URL.
         """
-        self.__sqs_client = boto3_client(
-            "sqs", region_name=os.getenv("REGION", "ap-southeast-1")
-        )
+        self.__sqs_client = boto3_client("sqs", region_name=os.getenv("REGION", "ap-southeast-1"))
         self.__sqs_url = os.getenv("EMAIL_QUEUE")
 
     def send_email(self, email_in: EmailIn) -> Tuple[HTTPStatus, str]:

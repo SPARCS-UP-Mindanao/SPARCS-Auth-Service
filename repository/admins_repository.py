@@ -84,9 +84,7 @@ class AdminsRepository:
             logging.error(f"[{self.core_obj} = {sub}]: {message}")
             return HTTPStatus.INTERNAL_SERVER_ERROR, None, message
         else:
-            logging.info(
-                f"[{self.core_obj} = {sub}]: Save Admins strategy data successful"
-            )
+            logging.info(f"[{self.core_obj} = {sub}]: Save Admins strategy data successful")
             return HTTPStatus.OK, admin_entry, None
 
     def query_admins(self, admin_id: str = None) -> Tuple[HTTPStatus, List[Admin], str]:
@@ -125,9 +123,7 @@ class AdminsRepository:
                 return HTTPStatus.NOT_FOUND, None, message
 
         except QueryError as e:
-            return self._extracted_from_query_admins_37(
-                "Failed to query admin: ", e, admin_id
-            )
+            return self._extracted_from_query_admins_37("Failed to query admin: ", e, admin_id)
         except TableDoesNotExist as db_error:
             return self._extracted_from_query_admins_37(
                 "Error on Table, Please check config to make sure table is created: ",
@@ -142,9 +138,7 @@ class AdminsRepository:
             )
         else:
             if admin_id:
-                logging.info(
-                    f"[{self.core_obj}={admin_id}] Fetch Admin data successful"
-                )
+                logging.info(f"[{self.core_obj}={admin_id}] Fetch Admin data successful")
                 return HTTPStatus.OK, admin_entries[0], None
 
             logging.info(f"[{self.core_obj}={admin_id}] Fetch Admin data successful")
@@ -156,9 +150,7 @@ class AdminsRepository:
         logging.error(f"[{self.core_obj}={admin_id}] {message}")
         return HTTPStatus.INTERNAL_SERVER_ERROR, None, message
 
-    def update_admin(
-        self, admin_entry: Admin, admin_in: AdminIn
-    ) -> Tuple[HTTPStatus, Admin, str]:
+    def update_admin(self, admin_entry: Admin, admin_in: AdminIn) -> Tuple[HTTPStatus, Admin, str]:
         """
         Update an Admin entity in the database.
 
@@ -174,9 +166,7 @@ class AdminsRepository:
         current_version = admin_entry.latestVersion
         new_version = current_version + 1
 
-        data = RepositoryUtils.load_data(
-            pydantic_schema_in=admin_in, exclude_unset=True
-        )
+        data = RepositoryUtils.load_data(pydantic_schema_in=admin_in, exclude_unset=True)
         has_update, updated_data = RepositoryUtils.get_update(
             old_data=RepositoryUtils.db_model_to_dict(admin_entry), new_data=data
         )
@@ -195,13 +185,9 @@ class AdminsRepository:
 
                 # Store Old Entry --------------------------------------------------------------------------
                 old_admin_entry = deepcopy(admin_entry)
-                old_admin_entry.rangeKey = admin_entry.rangeKey.replace(
-                    "v0#", f"v{new_version}#"
-                )
+                old_admin_entry.rangeKey = admin_entry.rangeKey.replace("v0#", f"v{new_version}#")
                 old_admin_entry.latestVersion = current_version
-                old_admin_entry.updatedBy = old_admin_entry.updatedBy or os.getenv(
-                    "CURRENT_USER"
-                )
+                old_admin_entry.updatedBy = old_admin_entry.updatedBy or os.getenv("CURRENT_USER")
                 transaction.save(old_admin_entry)
 
             admin_entry.refresh()
@@ -230,12 +216,8 @@ class AdminsRepository:
             current_version = admin_entry.latestVersion
             new_version = current_version + 1
             old_admin_entry = deepcopy(admin_entry)
-            old_admin_entry.rangeKey = admin_entry.rangeKey.replace(
-                "v0#", f"v{new_version}#"
-            )
-            old_admin_entry.updatedBy = old_admin_entry.updatedBy or os.getenv(
-                "CURRENT_USER"
-            )
+            old_admin_entry.rangeKey = admin_entry.rangeKey.replace("v0#", f"v{new_version}#")
+            old_admin_entry.updatedBy = old_admin_entry.updatedBy or os.getenv("CURRENT_USER")
             old_admin_entry.save()
 
             # set entry status to deleted

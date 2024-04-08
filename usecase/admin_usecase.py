@@ -20,9 +20,7 @@ class AdminUseCase:
         """
         self.__admins_repository = AdminsRepository()
 
-    def create_admin(
-        self, admin_in: AdminIn, sub: str
-    ) -> Union[JSONResponse, AdminOut]:
+    def create_admin(self, admin_in: AdminIn, sub: str) -> Union[JSONResponse, AdminOut]:
         """
         Create a new Admin entity.
 
@@ -35,18 +33,14 @@ class AdminUseCase:
         :return: A JSON response or the created Admin entity.
         :rtype: JSON
         """
-        status, admin, message = self.__admins_repository.store_admin(
-            admin_in=admin_in, sub=sub
-        )
+        status, admin, message = self.__admins_repository.store_admin(admin_in=admin_in, sub=sub)
         if status != HTTPStatus.OK:
             return JSONResponse(status_code=status, content={"message": message})
 
         admin_data = self.__convert_data_entry_to_dict(admin)
         return AdminOut(**admin_data)
 
-    def update_admin(
-        self, admin_id: str, admin_in: AdminIn
-    ) -> Union[JSONResponse, AdminOut]:
+    def update_admin(self, admin_id: str, admin_in: AdminIn) -> Union[JSONResponse, AdminOut]:
         """
         Update an existing Admin entity.
 
@@ -63,9 +57,7 @@ class AdminUseCase:
         if status != HTTPStatus.OK:
             return JSONResponse(status_code=status, content={"message": message})
 
-        status, update_admin, message = self.__admins_repository.update_admin(
-            admin_entry=admin, admin_in=admin_in
-        )
+        status, update_admin, message = self.__admins_repository.update_admin(admin_entry=admin, admin_in=admin_in)
         if status != HTTPStatus.OK:
             return JSONResponse(status_code=status, content={"message": message})
 

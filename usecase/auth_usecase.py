@@ -66,9 +66,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return res
 
@@ -99,9 +97,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
@@ -167,9 +163,7 @@ class AuthUsecase:
             )
 
             auth_model_dict = auth_model.dict(exclude_none=True, exclude_unset=True)
-            auth_response = JSONResponse(
-                status_code=HTTPStatus.OK, content=auth_model_dict
-            )
+            auth_response = JSONResponse(status_code=HTTPStatus.OK, content=auth_model_dict)
             auth_response.set_cookie(
                 "Authorization",
                 value=f"Bearer {auth_model.accessToken}",
@@ -190,9 +184,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return auth_response
 
@@ -234,9 +226,7 @@ class AuthUsecase:
                 sub=username,
             )
             auth_model_dict = auth_model.dict(exclude_none=True, exclude_unset=True)
-            auth_response = JSONResponse(
-                status_code=HTTPStatus.OK, content=auth_model_dict
-            )
+            auth_response = JSONResponse(status_code=HTTPStatus.OK, content=auth_model_dict)
             auth_response.set_cookie(
                 "Authorization",
                 value=f"Bearer {auth_model.accessToken}",
@@ -266,9 +256,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
 
     def sign_out(self, accessToken: str):
         """
@@ -288,9 +276,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
@@ -325,9 +311,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
@@ -364,9 +348,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
@@ -397,9 +379,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
@@ -421,9 +401,7 @@ class AuthUsecase:
         :rtype: dict or None
         """
         try:
-            response = self.client.admin_get_user(
-                UserPoolId=self.user_pool_id, Username=username
-            )
+            response = self.client.admin_get_user(UserPoolId=self.user_pool_id, Username=username)
         except Exception as e:
             err_msg = str(e)
             logging.error(err_msg)
@@ -478,9 +456,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
@@ -489,9 +465,7 @@ class AuthUsecase:
                 },
             )
 
-    def update_temp_password(
-        self, update_temp_password: UpdateTemporaryPasswordRequest
-    ):
+    def update_temp_password(self, update_temp_password: UpdateTemporaryPasswordRequest):
         """
         Updates the temporary password of a user.
 
@@ -545,9 +519,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
@@ -569,15 +541,11 @@ class AuthUsecase:
         :rtype: None or JSONResponse
         """
         try:
-            self.client.admin_delete_user(
-                UserPoolId=self.user_pool_id, Username=admin_id
-            )
+            self.client.admin_delete_user(UserPoolId=self.user_pool_id, Username=admin_id)
             return self.admin_uc.delete_admin(admin_id=admin_id)
 
         except Exception as e:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(
-                status_code=HTTPStatus.BAD_REQUEST, content={"message": message}
-            )
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})

@@ -27,10 +27,7 @@ def basic_auth_handler(event, context):
     decoded_credentials = base64.b64decode(encoded_credentials).decode("utf-8")
     username, password = decoded_credentials.split(":")
 
-    if (
-        username == BasicAuthCredentials.username.value
-        and password == BasicAuthCredentials.password.value
-    ):
+    if username == BasicAuthCredentials.username.value and password == BasicAuthCredentials.password.value:
         return generate_policy("user", "Allow", event["methodArn"])
 
     return unauthorized_response("Unauthorized")
@@ -56,9 +53,7 @@ def generate_policy(principal_id, effect, resource):
         "principalId": principal_id,
         "policyDocument": {
             "Version": "2012-10-17",
-            "Statement": [
-                {"Action": "execute-api:Invoke", "Effect": effect, "Resource": resource}
-            ],
+            "Statement": [{"Action": "execute-api:Invoke", "Effect": effect, "Resource": resource}],
         },
     }
     return policy
