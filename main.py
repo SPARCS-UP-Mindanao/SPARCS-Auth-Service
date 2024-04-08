@@ -7,8 +7,8 @@ from mangum import Mangum
 
 from controller.auth_controller import api_controller
 
-STAGE = os.environ.get('STAGE')
-root_path = f'/{STAGE}' if STAGE else '/'
+STAGE = os.environ.get("STAGE")
+root_path = f"/{STAGE}" if STAGE else "/"
 
 app = FastAPI(
     root_path=root_path,
@@ -36,7 +36,7 @@ def welcome():
 
 
 api_controller(app)
-mangum_handler = Mangum(app, lifespan='off')
+mangum_handler = Mangum(app, lifespan="off")
 
 
 @cors_headers

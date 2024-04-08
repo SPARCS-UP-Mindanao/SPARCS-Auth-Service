@@ -20,7 +20,7 @@ admin_auth_router = APIRouter()
     "/invite",
     response_model=SignUpResponse,
     responses={
-        500: {'model': Message, 'description': 'Internal Server Error'},
+        500: {"model": Message, "description": "Internal Server Error"},
     },
     summary="Register User",
 )
@@ -35,8 +35,20 @@ def invite_admin(
     invite_admin_request: AdminIn,
     current_user: AccessUser = Depends(get_current_user),
 ):
+    """
+    Invite a new admin to the system.
+
+    :param invite_admin_request: The details of the admin to invite.
+    :type invite_admin_request: AdminIn
+
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: Unauthorized if the current user is not an admin, otherwise the response to the sign-up request.
+    :rtype: JSONResponse
+    """
     _ = current_user
-    if os.getenv('CURRENT_USER_IS_ADMIN', '') != 'True':
+    if os.getenv("CURRENT_USER_IS_ADMIN", "") != "True":
         return JSONResponse(
             status_code=HTTPStatus.UNAUTHORIZED,
             content={
@@ -52,7 +64,7 @@ def invite_admin(
     "/update-password",
     response_model=Message,
     responses={
-        500: {'model': Message, 'description': 'Internal Server Error'},
+        500: {"model": Message, "description": "Internal Server Error"},
     },
     summary="Change Password",
 )
@@ -69,7 +81,7 @@ def update_temp_password(req: UpdateTemporaryPasswordRequest):
 
 
 @admin_auth_router.get(
-    '/current-user',
+    "/current-user",
     response_model=AccessUser,
     responses={
         404: {"model": Message, "description": "Admin not found"},
@@ -78,7 +90,7 @@ def update_temp_password(req: UpdateTemporaryPasswordRequest):
     summary="Get Current user",
 )
 @admin_auth_router.get(
-    '/current-user/',
+    "/current-user/",
     response_model=AccessUser,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -87,11 +99,20 @@ def update_temp_password(req: UpdateTemporaryPasswordRequest):
 def get_current_user_admin(
     current_user: AccessUser = Depends(get_current_user),
 ):
+    """
+    Get information about the current user.
+
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: The current user.
+    :rtype: AccessUser
+    """
     return current_user
 
 
 @admin_auth_router.get(
-    '',
+    "",
     response_model=List[AdminOut],
     responses={
         404: {"model": Message, "description": "Admin not found"},
@@ -100,7 +121,7 @@ def get_current_user_admin(
     summary="Get Admins",
 )
 @admin_auth_router.get(
-    '/',
+    "/",
     response_model=List[AdminOut],
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -112,22 +133,22 @@ def get_admins(
     """
     Get a list of all admins in the current database.
 
-    Parameters:
-    - current_user (AccessUser): The currently authenticated user.
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
 
-    Returns:
-    - List[AdminOut]: A list of admin records.
+    :return: A list of admin records, otherwise an error message for unauthorized access.
+    :rtype: List[AdminOut] or JSONResponse
 
-    Responses:
-    - 200: List of admins retrieved successfully
-    - 404: Admin not found
-    - 500: Internal server error
+    :responses:
+        - 200: List of admins retrieved successfully
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
-    if os.getenv('CURRENT_USER_IS_ADMIN') != 'True':
+    if os.getenv("CURRENT_USER_IS_ADMIN") != "True":
         return JSONResponse(
             status_code=HTTPStatus.FORBIDDEN,
-            content={'message': 'Unauthorized'},
+            content={"message": "Unauthorized"},
         )
 
     admin_uc = AdminUseCase()
@@ -135,7 +156,7 @@ def get_admins(
 
 
 @admin_auth_router.get(
-    '/{entryId}',
+    "/{entryId}",
     response_model=AdminOut,
     responses={
         404: {"model": Message, "description": "Admin not found"},
@@ -144,36 +165,38 @@ def get_admins(
     summary="Get Admin",
 )
 @admin_auth_router.get(
-    '/{entryId}/',
+    "/{entryId}/",
     response_model=AdminOut,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
     include_in_schema=False,
 )
 def get_admin(
-    entry_id: str = Path(..., title='admin Id', alias=CommonConstants.ENTRY_ID),
+    entry_id: str = Path(..., title="admin Id", alias=CommonConstants.ENTRY_ID),
     current_user: AccessUser = Depends(get_current_user),
 ):
     """
     Get details of a single admin from the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to retrieve.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to retrieve.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Details of the admin.
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
 
-    Responses:
-    - 200: Admin retrieved successfully
-    - 404: Admin not found
-    - 500: Internal server error
+    :return: The details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin retrieved successfully
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
-    if os.getenv('CURRENT_USER_IS_ADMIN') != 'True':
+    if os.getenv("CURRENT_USER_IS_ADMIN") != "True":
         return JSONResponse(
             status_code=HTTPStatus.FORBIDDEN,
-            content={'message': 'Unauthorized'},
+            content={"message": "Unauthorized"},
         )
 
     admins_uc = AdminUseCase()
@@ -181,7 +204,7 @@ def get_admin(
 
 
 @admin_auth_router.put(
-    '/{entryId}',
+    "/{entryId}",
     response_model=AdminOut,
     responses={
         400: {"model": Message, "description": "Bad request"},
@@ -191,7 +214,7 @@ def get_admin(
     summary="Update Admin",
 )
 @admin_auth_router.put(
-    '/{entryId}/',
+    "/{entryId}/",
     response_model=AdminOut,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -199,31 +222,35 @@ def get_admin(
 )
 def update_admin(
     admin: AdminIn,
-    entry_id: str = Path(..., title='Admin Id', alias=CommonConstants.ENTRY_ID),
+    entry_id: str = Path(..., title="Admin Id", alias=CommonConstants.ENTRY_ID),
     current_user: AccessUser = Depends(get_current_user),
 ):
     """
     Update an admin's details in the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to update.
-    - admin (AdminIn): New details for the admin.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to update.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Updated details of the admin.
+    :param admin: New details for the admin.
+    :type admin: AdminIn
 
-    Responses:
-    - 200: Admin updated successfully
-    - 400: Bad request
-    - 404: Admin not found
-    - 500: Internal server error
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: Updated details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin updated successfully
+        - 400: Bad request
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
-    if os.getenv('CURRENT_USER_IS_ADMIN') != 'True':
+    if os.getenv("CURRENT_USER_IS_ADMIN") != "True":
         return JSONResponse(
             status_code=HTTPStatus.FORBIDDEN,
-            content={'message': 'Unauthorized'},
+            content={"message": "Unauthorized"},
         )
 
     admin_uc = AdminUseCase()
@@ -231,44 +258,48 @@ def update_admin(
 
 
 @admin_auth_router.delete(
-    '/{entryId}',
+    "/{entryId}",
     status_code=HTTPStatus.NO_CONTENT,
     responses={
-        204: {'description': 'Admin entry deletion success', 'content': None},
+        204: {"description": "Admin entry deletion success", "content": None},
     },
     summary="Delete Admin",
 )
 @admin_auth_router.delete(
-    '/{entryId}/',
+    "/{entryId}/",
     status_code=HTTPStatus.NO_CONTENT,
     include_in_schema=False,
 )
 def delete_admin(
-    entry_id: str = Path(..., title='admin Id', alias=CommonConstants.ENTRY_ID),
+    entry_id: str = Path(..., title="admin Id", alias=CommonConstants.ENTRY_ID),
     current_user: AccessUser = Depends(get_current_user),
 ):
     """
     Update an admin's details in the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to update.
-    - admin (AdminIn): New details for the admin.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to update.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Updated details of the admin.
+    :param admin: New details for the admin.
+    :type admin: AdminIn
 
-    Responses:
-    - 200: Admin updated successfully
-    - 400: Bad request
-    - 404: Admin not found
-    - 500: Internal server error
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: Updated details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin updated successfully
+        - 400: Bad request
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
-    if os.getenv('CURRENT_USER_IS_ADMIN') != 'True':
+    if os.getenv("CURRENT_USER_IS_ADMIN") != "True":
         return JSONResponse(
             status_code=HTTPStatus.FORBIDDEN,
-            content={'message': 'Unauthorized'},
+            content={"message": "Unauthorized"},
         )
 
     admin_uc = AuthUsecase()
