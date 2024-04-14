@@ -7,20 +7,20 @@ from mangum import Mangum
 
 from controller.auth_controller import api_controller
 
-STAGE = os.environ.get("STAGE")
-root_path = f"/{STAGE}" if STAGE else "/"
+STAGE = os.environ.get('STAGE')
+root_path = f'/{STAGE}' if STAGE else '/'
 
 app = FastAPI(
     root_path=root_path,
-    title="SPARCS Auth Service",
+    title='SPARCS Auth Service',
     contact={
-        "name": "Society of Programmers and Refined Computer Scientists",
-        "email": "contact@sparcsup.com",
+        'name': 'Society of Programmers and Refined Computer Scientists',
+        'email': 'contact@sparcsup.com',
     },
 )
 
 
-@app.get("/", include_in_schema=False)
+@app.get('/', include_in_schema=False)
 def welcome():
     html_content = """
     <html>
@@ -36,7 +36,7 @@ def welcome():
 
 
 api_controller(app)
-mangum_handler = Mangum(app, lifespan="off")
+mangum_handler = Mangum(app, lifespan='off')
 
 
 @cors_headers

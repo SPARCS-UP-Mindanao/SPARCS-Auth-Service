@@ -30,6 +30,7 @@ moto = "==3.1.1"
 pylint = "==2.13.8"
 pylint-pydantic = "==0.1.8"
 httpx = "==0.23.3"
+uvicorn = "*"
 
 [requires]
 python_version = "3.8"

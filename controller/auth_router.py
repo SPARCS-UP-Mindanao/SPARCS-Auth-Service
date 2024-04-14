@@ -22,15 +22,15 @@ auth_router = APIRouter()
 
 
 @auth_router.post(
-    "/signup",
+    '/signup',
     response_model=SignUpResponse,
     responses={
-        500: {"model": Message, "description": "Internal Server Error"},
+        500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Register User",
+    summary='Register User',
 )
 @auth_router.post(
-    "/signup/",
+    '/signup/',
     response_model=SignUpResponse,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -51,15 +51,15 @@ def signup(signup_details: SignUp):
 
 
 @auth_router.post(
-    "/login",
+    '/login',
     response_model=Union[AuthResponse, Challenge],
     responses={
-        500: {"model": Message, "description": "Internal Server Error"},
+        500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Login User",
+    summary='Login User',
 )
 @auth_router.post(
-    "/login/",
+    '/login/',
     response_model=Union[AuthResponse, Challenge],
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -80,15 +80,15 @@ def login(login_details: Login):
 
 
 @auth_router.post(
-    "/refresh",
+    '/refresh',
     response_model=AuthResponse,
     responses={
-        500: {"model": Message, "description": "Internal Server Error"},
+        500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Refresh Token",
+    summary='Refresh Token',
 )
 @auth_router.post(
-    "/refresh/",
+    '/refresh/',
     response_model=AuthResponse,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -109,15 +109,15 @@ def refresh(refreshToken: RefreshTokenRequest):
 
 
 @auth_router.post(
-    "/confirm",
+    '/confirm',
     response_model=Message,
     responses={
-        500: {"model": Message, "description": "Internal Server Error"},
+        500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Confirm User",
+    summary='Confirm User',
 )
 @auth_router.post(
-    "/confirm/",
+    '/confirm/',
     response_model=Message,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -138,15 +138,15 @@ def confirm(confirm_signup: ConfirmSignUp):
 
 
 @auth_router.post(
-    "/logout",
+    '/logout',
     response_model=Message,
     responses={
-        500: {"model": Message, "description": "Internal Server Error"},
+        500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Logout User",
+    summary='Logout User',
 )
 @auth_router.post(
-    "/logout/",
+    '/logout/',
     response_model=Message,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -167,15 +167,15 @@ def logout(log_out_request: LogOutRequest):
 
 
 @auth_router.post(
-    "/forgot-password",
+    '/forgot-password',
     response_model=Message,
     responses={
-        500: {"model": Message, "description": "Internal Server Error"},
+        500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Forgot Password",
+    summary='Forgot Password',
 )
 @auth_router.post(
-    "/forgot-password/",
+    '/forgot-password/',
     response_model=Message,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -196,15 +196,15 @@ def forgot_password(req: ForgotPasswordRequest):
 
 
 @auth_router.post(
-    "/confirm-forgot-password",
+    '/confirm-forgot-password',
     response_model=Message,
     responses={
-        500: {"model": Message, "description": "Internal Server Error"},
+        500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Change Password",
+    summary='Change Password',
 )
 @auth_router.post(
-    "/confirm-forgot-password/",
+    '/confirm-forgot-password/',
     response_model=Message,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -225,15 +225,15 @@ def confirm_forgot_password(req: ConfirmForgotPasswordRequest):
 
 
 @auth_router.post(
-    "/change-password",
+    '/change-password',
     response_model=Message,
     responses={
-        500: {"model": Message, "description": "Internal Server Error"},
+        500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Change Password",
+    summary='Change Password',
 )
 @auth_router.post(
-    "/change-password/",
+    '/change-password/',
     response_model=Message,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,

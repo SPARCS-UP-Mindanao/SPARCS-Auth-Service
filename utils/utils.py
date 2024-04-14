@@ -19,14 +19,14 @@ class Utils:
         :return: The retrieved secret value.
         :rtype: str
         """
-        secret = ""
+        secret = ''
         try:
             session = Session()
-            client = session.client(service_name="ssm", region_name=os.getenv("REGION"))
+            client = session.client(service_name='ssm', region_name=os.getenv('REGION'))
             resp = client.get_parameter(Name=secret_name, WithDecryption=True)
-            secret = resp["Parameter"]["Value"]
+            secret = resp['Parameter']['Value']
         except Exception as e:
-            message = f"Failed to get secret, {secret_name}, from AWS SSM: {str(e)}"
+            message = f'Failed to get secret, {secret_name}, from AWS SSM: {str(e)}'
             logging.error(message)
 
         return secret
@@ -50,8 +50,8 @@ class Utils:
         """
         message = user_name + client_id
         dig = hmac.new(
-            bytes(client_secret, "latin-1"),
-            msg=bytes(message, "latin-1"),
+            bytes(client_secret, 'latin-1'),
+            msg=bytes(message, 'latin-1'),
             digestmod=hashlib.sha256,
         ).digest()
         return base64.b64encode(dig).decode()
@@ -67,4 +67,4 @@ class Utils:
         :return: The stripped error message.
         :rtype: str
         """
-        return message.split(": ")[-1]
+        return message.split(': ')[-1]

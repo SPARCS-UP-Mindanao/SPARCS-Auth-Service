@@ -19,18 +19,18 @@ def basic_auth_handler(event, context):
     :rtype: dict
     """
     __ = context
-    authorization_header = event["authorizationToken"]
+    authorization_header = event['authorizationToken']
     auth_type, encoded_credentials = authorization_header.split(None, 1)
-    if auth_type != "Basic":
-        return unauthorized_response("Unauthorized")
+    if auth_type != 'Basic':
+        return unauthorized_response('Unauthorized')
 
-    decoded_credentials = base64.b64decode(encoded_credentials).decode("utf-8")
-    username, password = decoded_credentials.split(":")
+    decoded_credentials = base64.b64decode(encoded_credentials).decode('utf-8')
+    username, password = decoded_credentials.split(':')
 
     if username == BasicAuthCredentials.username.value and password == BasicAuthCredentials.password.value:
-        return generate_policy("user", "Allow", event["methodArn"])
+        return generate_policy('user', 'Allow', event['methodArn'])
 
-    return unauthorized_response("Unauthorized")
+    return unauthorized_response('Unauthorized')
 
 
 def generate_policy(principal_id, effect, resource):
@@ -50,10 +50,10 @@ def generate_policy(principal_id, effect, resource):
     :rtype: dict
     """
     policy = {
-        "principalId": principal_id,
-        "policyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [{"Action": "execute-api:Invoke", "Effect": effect, "Resource": resource}],
+        'principalId': principal_id,
+        'policyDocument': {
+            'Version': '2012-10-17',
+            'Statement': [{'Action': 'execute-api:Invoke', 'Effect': effect, 'Resource': resource}],
         },
     }
     return policy
@@ -69,8 +69,8 @@ def unauthorized_response(message):
     :return: The unauthorized response.
     """
     response = {
-        "statusCode": 401,
-        "body": json.dumps({"message": message}),
-        "headers": {"WWW-Authenticate": "Basic"},
+        'statusCode': 401,
+        'body': json.dumps({'message': message}),
+        'headers': {'WWW-Authenticate': 'Basic'},
     }
     return response
