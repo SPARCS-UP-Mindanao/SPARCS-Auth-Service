@@ -17,8 +17,8 @@ class EmailUsecase:
         """
         Initialize the EmailUsecase with an instance of the SQS client and the SQS URL.
         """
-        self.__sqs_client = boto3_client("sqs", region_name=os.getenv("REGION", "ap-southeast-1"))
-        self.__sqs_url = os.getenv("EMAIL_QUEUE")
+        self.__sqs_client = boto3_client('sqs', region_name=os.getenv('REGION', 'ap-southeast-1'))
+        self.__sqs_url = os.getenv('EMAIL_QUEUE')
 
     def __send_email_handler(self, email_in_list: List[EmailIn]) -> Tuple[HTTPStatus, str]:
         timestamp = datetime.now(timezone.utc).isoformat(timespec='seconds')
@@ -50,7 +50,7 @@ class EmailUsecase:
             self.__send_email_handler([email_in])
 
         except Exception as e:
-            message = f"Failed to send email: {str(e)}"
+            message = f'Failed to send email: {str(e)}'
             logger.error(message)
             return HTTPStatus.INTERNAL_SERVER_ERROR, message
 
@@ -70,18 +70,18 @@ class EmailUsecase:
         :return: None
         :rtype: None
         """
-        frontend_url = os.getenv("FRONTEND_URL")
-        subject = "TechTix Admin Invitation"
-        salutation = "Good day,"
+        frontend_url = os.getenv('FRONTEND_URL')
+        subject = 'TechTix Admin Invitation'
+        salutation = 'Good day,'
         body = [
-            "You are invited to be an Admin of TechTix. Below are your temporary credentials:",
-            f"Link: {frontend_url}/admin/update-password",
-            f"Email: {email}",
-            f"Temporary Password: {temp_password}",
-            "Please change your password after logging in.",
-            "Thank you!",
+            'You are invited to be an Admin of TechTix. Below are your temporary credentials:',
+            f'Link: {frontend_url}/admin/update-password',
+            f'Email: {email}',
+            f'Temporary Password: {temp_password}',
+            'Please change your password after logging in.',
+            'Thank you!',
         ]
-        regards = ["Best,"]
+        regards = ['Best,']
         email_in = EmailIn(
             to=[email],
             subject=subject,
@@ -91,7 +91,7 @@ class EmailUsecase:
             emailType=EmailType.ADMIN_INVITATION_EMAIL,
         )
 
-        logger.info(f"Sending event invitation email to {email}")
+        logger.info(f'Sending event invitation email to {email}')
         self.send_email(email_in=email_in)
 
         return

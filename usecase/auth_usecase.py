@@ -27,10 +27,10 @@ from utils.utils import Utils
 
 class AuthUsecase:
     def __init__(self) -> None:
-        self.client = boto3_client("cognito-idp", region_name=os.environ["REGION"])
-        self.user_pool_id = os.getenv("USER_POOL_ID")
-        self.user_pool_client_id = os.getenv("USER_POOL_CLIENT_ID")
-        self.client_secret = Utils.get_secret(os.getenv("CLIENT_SECRET_NAME"))
+        self.client = boto3_client('cognito-idp', region_name=os.environ['REGION'])
+        self.user_pool_id = os.getenv('USER_POOL_ID')
+        self.user_pool_client_id = os.getenv('USER_POOL_CLIENT_ID')
+        self.client_secret = Utils.get_secret(os.getenv('CLIENT_SECRET_NAME'))
         self.email_uc = EmailUsecase()
         self.admin_uc = AdminUseCase()
 
@@ -57,7 +57,7 @@ class AuthUsecase:
                     client_id=self.user_pool_client_id,
                 ),
             )
-            sub = auth_response["UserSub"]
+            sub = auth_response['UserSub']
             res = SignUpResponse(
                 email=sign_up_details.email,
                 sub=sub,
@@ -66,7 +66,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return res
 
@@ -97,12 +97,12 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
                 content={
-                    "message": "User confirmed successfully",
+                    'message': 'User confirmed successfully',
                 },
             )
 
@@ -121,11 +121,11 @@ class AuthUsecase:
         try:
             response = self.client.initiate_auth(
                 ClientId=self.user_pool_client_id,
-                AuthFlow="USER_PASSWORD_AUTH",
+                AuthFlow='USER_PASSWORD_AUTH',
                 AuthParameters={
-                    "USERNAME": login_details.email,
-                    "PASSWORD": login_details.password,
-                    "SECRET_HASH": Utils.compute_secret_hash(
+                    'USERNAME': login_details.email,
+                    'PASSWORD': login_details.password,
+                    'SECRET_HASH': Utils.compute_secret_hash(
                         client_secret=self.client_secret,
                         user_name=login_details.email,
                         client_id=self.user_pool_client_id,
@@ -133,11 +133,11 @@ class AuthUsecase:
                 },
             )
 
-            auth_result = response.get("AuthenticationResult")
-            session = response.get("Session")
+            auth_result = response.get('AuthenticationResult')
+            session = response.get('Session')
             if auth_result is None:
-                challenge_name = response.get("ChallengeName")
-                if challenge_name == "NEW_PASSWORD_REQUIRED":
+                challenge_name = response.get('ChallengeName')
+                if challenge_name == 'NEW_PASSWORD_REQUIRED':
                     return Challenge(
                         challengeName=challenge_name,
                         session=session,
@@ -146,36 +146,36 @@ class AuthUsecase:
                     return JSONResponse(
                         status_code=HTTPStatus.BAD_REQUEST,
                         content={
-                            "message": "Invalid credentials",
+                            'message': 'Invalid credentials',
                         },
                     )
 
-            access_token = auth_result.get("AccessToken")
+            access_token = auth_result.get('AccessToken')
             user_info = self.client.get_user(AccessToken=access_token)
             auth_model = AuthResponse(
                 accessToken=access_token,
-                expiresIn=auth_result.get("ExpiresIn"),
-                tokenType=auth_result.get("TokenType"),
-                refreshToken=auth_result.get("RefreshToken"),
-                idToken=auth_result.get("IdToken"),
+                expiresIn=auth_result.get('ExpiresIn'),
+                tokenType=auth_result.get('TokenType'),
+                refreshToken=auth_result.get('RefreshToken'),
+                idToken=auth_result.get('IdToken'),
                 session=session,
-                sub=user_info.get("Username"),
+                sub=user_info.get('Username'),
             )
 
             auth_model_dict = auth_model.dict(exclude_none=True, exclude_unset=True)
             auth_response = JSONResponse(status_code=HTTPStatus.OK, content=auth_model_dict)
             auth_response.set_cookie(
-                "Authorization",
-                value=f"Bearer {auth_model.accessToken}",
-                samesite="none",
+                'Authorization',
+                value=f'Bearer {auth_model.accessToken}',
+                samesite='none',
                 domain=CommonConstants.DOMAIN_NAME,
                 secure=True,
                 httponly=True,
             )
             auth_response.set_cookie(
-                "Refresh-Token",
+                'Refresh-Token',
                 value=auth_model.refreshToken,
-                samesite="none",
+                samesite='none',
                 domain=CommonConstants.DOMAIN_NAME,
                 secure=True,
                 httponly=True,
@@ -184,7 +184,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return auth_response
 
@@ -204,10 +204,10 @@ class AuthUsecase:
             username = refresh_token_request.sub
             response = self.client.initiate_auth(
                 ClientId=self.user_pool_client_id,
-                AuthFlow="REFRESH_TOKEN_AUTH",
+                AuthFlow='REFRESH_TOKEN_AUTH',
                 AuthParameters={
-                    "REFRESH_TOKEN": refresh_token_request.refreshToken,
-                    "SECRET_HASH": Utils.compute_secret_hash(
+                    'REFRESH_TOKEN': refresh_token_request.refreshToken,
+                    'SECRET_HASH': Utils.compute_secret_hash(
                         client_secret=self.client_secret,
                         user_name=username,
                         client_id=self.user_pool_client_id,
@@ -215,38 +215,38 @@ class AuthUsecase:
                 },
             )
 
-            auth_result = response.get("AuthenticationResult")
+            auth_result = response.get('AuthenticationResult')
 
             auth_model = AuthResponse(
-                accessToken=auth_result.get("AccessToken"),
-                expiresIn=auth_result.get("ExpiresIn"),
-                tokenType=auth_result.get("TokenType"),
-                refreshToken=auth_result.get("RefreshToken"),
-                idToken=auth_result.get("IdToken"),
+                accessToken=auth_result.get('AccessToken'),
+                expiresIn=auth_result.get('ExpiresIn'),
+                tokenType=auth_result.get('TokenType'),
+                refreshToken=auth_result.get('RefreshToken'),
+                idToken=auth_result.get('IdToken'),
                 sub=username,
             )
             auth_model_dict = auth_model.dict(exclude_none=True, exclude_unset=True)
             auth_response = JSONResponse(status_code=HTTPStatus.OK, content=auth_model_dict)
             auth_response.set_cookie(
-                "Authorization",
-                value=f"Bearer {auth_model.accessToken}",
-                samesite="none",
+                'Authorization',
+                value=f'Bearer {auth_model.accessToken}',
+                samesite='none',
                 domain=CommonConstants.DOMAIN_NAME,
                 secure=True,
                 httponly=True,
             )
             auth_response.set_cookie(
-                "Refresh-Token",
+                'Refresh-Token',
                 value=auth_model.refreshToken,
-                samesite="none",
+                samesite='none',
                 domain=CommonConstants.DOMAIN_NAME,
                 secure=True,
                 httponly=True,
             )
             auth_response.set_cookie(
-                "Username",
+                'Username',
                 value=username,
-                samesite="none",
+                samesite='none',
                 domain=CommonConstants.DOMAIN_NAME,
                 secure=True,
                 httponly=True,
@@ -256,7 +256,7 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
 
     def sign_out(self, accessToken: str):
         """
@@ -276,12 +276,12 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
                 content={
-                    "message": "User logged out successfully",
+                    'message': 'User logged out successfully',
                 },
             )
 
@@ -311,12 +311,12 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
                 content={
-                    "message": "Password reset code sent to email",
+                    'message': 'Password reset code sent to email',
                 },
             )
 
@@ -348,12 +348,12 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
                 content={
-                    "message": "Password Changed Successfully",
+                    'message': 'Password Changed Successfully',
                 },
             )
 
@@ -379,12 +379,12 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
                 content={
-                    "message": "Password Changed Successfully",
+                    'message': 'Password Changed Successfully',
                 },
             )
 
@@ -430,9 +430,9 @@ class AuthUsecase:
                     Username=username,
                     TemporaryPassword=CommonConstants.TEMPORARY_PASSWORD,
                     ForceAliasCreation=False,
-                    MessageAction="SUPPRESS",
+                    MessageAction='SUPPRESS',
                 )
-                user = created_user.get("User")
+                user = created_user.get('User')
 
             self.client.admin_add_user_to_group(
                 UserPoolId=self.user_pool_id,
@@ -441,7 +441,7 @@ class AuthUsecase:
             )
 
             # create a new admin
-            sub = user.get("Username")
+            sub = user.get('Username')
             created_admin = self.admin_uc.create_admin(admin_in=invite_admin, sub=sub)
             if isinstance(created_admin, JSONResponse):
                 return created_admin
@@ -456,12 +456,12 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
                 content={
-                    "message": "User invited successfully",
+                    'message': 'User invited successfully',
                 },
             )
 
@@ -488,19 +488,19 @@ class AuthUsecase:
                 return JSONResponse(
                     status_code=HTTPStatus.BAD_REQUEST,
                     content={
-                        "message": "Invalid credentials",
+                        'message': 'Invalid credentials',
                     },
                 )
 
             session = response.session
             self.client.respond_to_auth_challenge(
                 ClientId=self.user_pool_client_id,
-                ChallengeName="NEW_PASSWORD_REQUIRED",
+                ChallengeName='NEW_PASSWORD_REQUIRED',
                 Session=session,
                 ChallengeResponses={
-                    "USERNAME": update_temp_password.email,
-                    "NEW_PASSWORD": update_temp_password.newPassword,
-                    "SECRET_HASH": Utils.compute_secret_hash(
+                    'USERNAME': update_temp_password.email,
+                    'NEW_PASSWORD': update_temp_password.newPassword,
+                    'SECRET_HASH': Utils.compute_secret_hash(
                         client_secret=self.client_secret,
                         user_name=update_temp_password.email,
                         client_id=self.user_pool_client_id,
@@ -509,7 +509,7 @@ class AuthUsecase:
             )
 
             user = self.get_user(update_temp_password.email)
-            sub = user.get("Username")
+            sub = user.get('Username')
             self.admin_uc.update_admin(
                 admin_id=sub,
                 admin_in=AdminPatch(isConfirmed=True),
@@ -519,12 +519,12 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})
         else:
             return JSONResponse(
                 status_code=HTTPStatus.OK,
                 content={
-                    "message": "Password Changed Successfully",
+                    'message': 'Password Changed Successfully',
                 },
             )
 
@@ -548,4 +548,4 @@ class AuthUsecase:
             err_msg = str(e)
             logging.error(err_msg)
             message = Utils.strip_error_message(err_msg)
-            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"message": message})
+            return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={'message': message})

@@ -35,7 +35,7 @@ class AdminUseCase:
         """
         status, admin, message = self.__admins_repository.store_admin(admin_in=admin_in, sub=sub)
         if status != HTTPStatus.OK:
-            return JSONResponse(status_code=status, content={"message": message})
+            return JSONResponse(status_code=status, content={'message': message})
 
         admin_data = self.__convert_data_entry_to_dict(admin)
         return AdminOut(**admin_data)
@@ -55,11 +55,11 @@ class AdminUseCase:
         """
         status, admin, message = self.__admins_repository.query_admins(admin_id)
         if status != HTTPStatus.OK:
-            return JSONResponse(status_code=status, content={"message": message})
+            return JSONResponse(status_code=status, content={'message': message})
 
         status, update_admin, message = self.__admins_repository.update_admin(admin_entry=admin, admin_in=admin_in)
         if status != HTTPStatus.OK:
-            return JSONResponse(status_code=status, content={"message": message})
+            return JSONResponse(status_code=status, content={'message': message})
 
         admin_data = self.__convert_data_entry_to_dict(update_admin)
         return AdminOut(**admin_data)
@@ -76,7 +76,7 @@ class AdminUseCase:
         """
         status, admin, message = self.__admins_repository.query_admins(admin_id)
         if status != HTTPStatus.OK:
-            return JSONResponse(status_code=status, content={"message": message})
+            return JSONResponse(status_code=status, content={'message': message})
 
         admin_data = self.__convert_data_entry_to_dict(admin)
         return AdminOut(**admin_data)
@@ -90,7 +90,7 @@ class AdminUseCase:
         """
         status, admins, message = self.__admins_repository.query_admins()
         if status is not HTTPStatus.OK:
-            return JSONResponse(status_code=status, content={"message": message})
+            return JSONResponse(status_code=status, content={'message': message})
 
         admins_data = [self.__convert_data_entry_to_dict(admin) for admin in admins]
         return [AdminOut(**admin_data) for admin_data in admins_data]
@@ -107,11 +107,11 @@ class AdminUseCase:
         """
         status, admin, message = self.__admins_repository.query_admins(admin_id)
         if status != HTTPStatus.OK:
-            return JSONResponse(status_code=status, content={"message": message})
+            return JSONResponse(status_code=status, content={'message': message})
 
         status, message = self.__admins_repository.delete_admin(admin_entry=admin)
         if status != HTTPStatus.OK:
-            return JSONResponse(status_code=status, content={"message": message})
+            return JSONResponse(status_code=status, content={'message': message})
 
         return None
 
