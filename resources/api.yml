@@ -1,0 +1,63 @@
+basicAuthAuthorizer:
+  handler: basic_auth.basic_auth_handler
+  timeout: 90
+  layers:
+    - Ref: PythonRequirementsLambdaLayer
+  environment:
+    USER_POOL_ID: !Ref UserPool
+    APP_CLIENT_ID: !Ref UserPoolClient
+
+app:
+  handler: main.handler
+  environment:
+    STAGE: ${self:custom.stage}
+    USER_POOL_ID: !Ref UserPool
+    USER_POOL_CLIENT_ID: !Ref UserPoolClient
+  layers:
+    - { Ref: PythonRequirementsLambdaLayer }
+  events:
+    - http:
+        path: /
+        method: get
+        cors: true
+    - http:
+        path: /{proxy+}
+        method: any
+        cors: true
+    - http:
+        path: /docs
+        method: get
+        authorizer:
+          name: basicAuthAuthorizer
+          type: token
+          identitySource: method.request.header.Authorization
+          identityValidationExpression: '^Basic\s(.+)$'
+          resultTtlInSeconds: 0
+        cors:
+          origins:
+            - "*"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminInitiateAuth
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminSetUserPassword
+        - cognito-idp:AdminAddUserToGroup
+        - cognito-idp:AdminGetUser
+        - cognito-idp:AdminDeleteUser
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+      Resource:
+        - arn:aws:ssm:*:*:parameter/sparcs-auth-secret-key-${self:custom.stage}
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:ap-southeast-1:192218445313:table/${self:custom.stage}-sparcs-events-entities
+    - Effect: Allow
+      Action:
+        - "sqs:*"
+      Resource:
+        - arn:aws:sqs:ap-southeast-1:192218445313:${self:custom.stage}-sparcs-events-email-queue.fifo
