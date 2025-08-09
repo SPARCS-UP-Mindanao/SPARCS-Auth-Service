@@ -12,16 +12,15 @@ h11 = "==0.12.0"
 mangum = "==0.11.0"
 starlette = "==0.14.2"
 typing-extensions = "==3.10.0.0"
-uvicorn = "==0.14.0"
 pynamodb = "==5.2.1"
-boto3 = "==1.22.7"
 ulid = "==1.1"
 fastapi-cloudauth = "==0.4.3"
-python-dotenv = "==1.0.0"
 pydantic = {version = "<2", extras = ["email"]}
 lambda-decorators = "==0.6.0"
 
 [dev-packages]
+boto3 = "==1.22.7"
+python-dotenv = "==1.0.0"
 pre-commit = "==3.3.3"
 pytest = "==7.1.1"
 pytest-cov = "==3.0.0"

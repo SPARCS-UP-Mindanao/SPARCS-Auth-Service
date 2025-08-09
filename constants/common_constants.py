@@ -12,8 +12,8 @@ class EntryStatus(str, Enum):
 
 
 class CommonConstants:
-    DOMAIN_NAME = 'sparcsup.com'
-    TEMPORARY_PASSWORD = 'Sparcsup123#'
+    DOMAIN_NAME = 'durianpy.org'
+    TEMPORARY_PASSWORD = 'Durianpy123#'
 
     # DB Constants
     CLS = 'cls'

@@ -28,8 +28,8 @@ class EmailUsecase:
         response = self.__sqs_client.send_message(
             QueueUrl=self.__sqs_url,
             MessageBody=json.dumps(payload),
-            MessageDeduplicationId=f'sparcs-event-auth-{timestamp}-{message_id}',
-            MessageGroupId='sparcs-event-auth',
+            MessageDeduplicationId=f'durianpy-event-auth-{timestamp}-{message_id}',
+            MessageGroupId='durianpy-event-auth',
         )
         message_id = response.get('MessageId')
         message = f'Queue message success: {message_id}'
