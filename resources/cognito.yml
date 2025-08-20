@@ -39,7 +39,6 @@ Resources:
     Properties:
       ClientName: ${self:custom.projectName}-${self:custom.stage}-${self:custom.serviceName}-UserPoolClient
       AllowedOAuthFlows:
-        - code
         - implicit
       AllowedOAuthScopes:
         - phone
@@ -48,19 +47,27 @@ Resources:
         - profile
         - aws.cognito.signin.user.admin
       CallbackURLs:
-        - https://cognito.com
+        - http://localhost:5173
+        - http://localhost:5173/
       ExplicitAuthFlows:
         - ALLOW_ADMIN_USER_PASSWORD_AUTH
         - ALLOW_USER_PASSWORD_AUTH
         - ALLOW_REFRESH_TOKEN_AUTH
       LogoutURLs:
-        - https://cognito.com
+        - http://localhost:5173
       PreventUserExistenceErrors: ENABLED
       UserPoolId: !Ref UserPool
       SupportedIdentityProviders:
         - COGNITO
+        - Google
       GenerateSecret: True
       RefreshTokenValidity: 180
+
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: ${self:custom.projectName}-${self:custom.stage}-${self:custom.serviceName}
+      UserPoolId: !Ref UserPool
 
   UserPoolGroupAdministrator:
     Type: AWS::Cognito::UserPoolGroup
@@ -87,6 +94,23 @@ Resources:
         Ref: 'ApiGatewayRestApi'
       StatusCode: '401'
 
+  GoogleIdentityProvider:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Properties:
+      ProviderName: Google
+      ProviderType: Google
+      UserPoolId: !Ref UserPool
+      AttributeMapping:
+        email: email
+        given_name: given_name
+        family_name: family_name
+        picture: picture
+        name: name
+      ProviderDetails:
+        client_id: "{{resolve:ssm:/gcp/google-oauth-client-id:2}}"
+        client_secret: "{{resolve:ssm:/gcp/google-oauth-client-secret:2}}"
+        authorize_scopes: "openid email profile phone"
+
 Outputs:
   UserPoolId:
     Value: !Ref UserPool
@@ -97,6 +121,11 @@ Outputs:
     Value: !Ref UserPoolClient
     Export:
       Name: AppClientId-${self:custom.stage}
+
+  UserPoolDomainUrl:
+    Value: !Sub "https://${UserPoolDomain}.auth.${AWS::Region}.amazoncognito.com"
+    Export:
+      Name: UserPoolDomainUrl-${self:custom.stage}
 
   BasicAuthAuthorizerARN:
     Value:
