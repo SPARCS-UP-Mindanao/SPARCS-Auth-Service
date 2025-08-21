@@ -48,41 +48,41 @@ provider:
     EMAIL_QUEUE: ${self:custom.emailQueue}
     FRONTEND_URL: ${self:custom.frontendUrl.${self:custom.stage}}
   logs:
-    restApi: true
+    restApi:
+      role: !GetAtt ApiGatewayCloudWatchRole.Arn
 
 resources:
   - ${file(resources/cognito.yml)}
   - Resources:
       ApiGatewayCloudWatchRole:
         Type: AWS::IAM::Role
-        Condition: ShouldCreateApiGatewayCloudWatchRole
         Properties:
-          RoleName: serverlessApiGatewayCloudWatchRole
+          RoleName: serverlessApiGatewayCloudWatchRole-${self:custom.serviceName}-${self:custom.stage}
           AssumeRolePolicyDocument:
             Version: "2012-10-17"
             Statement:
-              - Effect: Allow
-                Principal:
-                  Service: apigateway.amazonaws.com
-                Action: sts:AssumeRole
+            - Effect: Allow
+              Principal:
+                Service: apigateway.amazonaws.com
+              Action: sts:AssumeRole
           Policies:
             - PolicyName: AllowCloudWatchLogs
               PolicyDocument:
                 Version: "2012-10-17"
                 Statement:
-                  - Effect: Allow
-                    Action:
-                      - logs:CreateLogGroup
-                      - logs:CreateLogStream
-                      - logs:DescribeLogGroups
-                      - logs:DescribeLogStreams
-                      - logs:PutLogEvents
-                    Resource: "*"
-    Conditions:
-      ShouldCreateApiGatewayCloudWatchRole:
-        Fn::Equals:
-          - "true"
-          - ${self:custom.createApiGatewayRole}
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:DescribeLogGroups
+                    - logs:DescribeLogStreams
+                    - logs:PutLogEvents
+                  Resource: "*"
+    Outputs:
+      ApiGatewayCloudWatchRoleArn:
+        Value: !GetAtt ApiGatewayCloudWatchRole.Arn
+        Export:
+          Name: ApiGatewayCloudWatchRole-${self:custom.serviceName}-${self:custom.stage}
 
 
 functions:
