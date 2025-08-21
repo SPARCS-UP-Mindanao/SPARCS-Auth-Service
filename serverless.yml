@@ -11,6 +11,7 @@ custom:
     dev: ${ssm:/techtix/frontend-url-dev}
     staging: ${ssm:/techtix/frontend-url-staging}
     prod: ${ssm:/techtix/frontend-url-prod}
+  createApiGatewayRole: ${env:CREATE_API_GW_ROLE, 'true'}
   pythonRequirements:
     dockerizePip: non-linux
     noDeploy:
@@ -54,6 +55,7 @@ resources:
   - Resources:
       ApiGatewayCloudWatchRole:
         Type: AWS::IAM::Role
+        Condition: ShouldCreateApiGatewayCloudWatchRole
         Properties:
           RoleName: serverlessApiGatewayCloudWatchRole
           AssumeRolePolicyDocument:
@@ -76,6 +78,11 @@ resources:
                       - logs:DescribeLogStreams
                       - logs:PutLogEvents
                     Resource: "*"
+    Conditions:
+      ShouldCreateApiGatewayCloudWatchRole:
+        Fn::Equals:
+          - "true"
+          - ${self:custom.createApiGatewayRole}
 
 
 functions:
