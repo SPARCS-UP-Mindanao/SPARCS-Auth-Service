@@ -36,6 +36,7 @@ Resources:
 
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
+    DependsOn: GoogleIdentityProvider
     Properties:
       ClientName: ${self:custom.projectName}-${self:custom.stage}-${self:custom.serviceName}-UserPoolClient
       AllowedOAuthFlows:

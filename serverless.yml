@@ -9,6 +9,7 @@ custom:
     !ImportValue EmailQueue-${self:custom.stage}
   frontendUrl:
     dev: ${ssm:/techtix/frontend-url-dev}
+    staging: ${ssm:/techtix/frontend-url-staging}
     prod: ${ssm:/techtix/frontend-url-prod}
   pythonRequirements:
     dockerizePip: non-linux
@@ -48,8 +49,6 @@ provider:
   logs:
     restApi: true
 
-# resources:
-#   - ${file(resources/cognito.yml)}
 resources:
   - ${file(resources/cognito.yml)}
   - Resources:
