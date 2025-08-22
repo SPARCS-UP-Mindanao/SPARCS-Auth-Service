@@ -30,7 +30,6 @@ class AuthUsecase:
         self.client = boto3_client('cognito-idp', region_name=os.environ['REGION'])
         self.user_pool_id = os.getenv('USER_POOL_ID')
         self.user_pool_client_id = os.getenv('USER_POOL_CLIENT_ID')
-        self.client_secret = Utils.get_secret(os.getenv('CLIENT_SECRET_NAME'))
         self.email_uc = EmailUsecase()
         self.admin_uc = AdminUseCase()
 
@@ -52,7 +51,6 @@ class AuthUsecase:
                 Username=sign_up_details.email,
                 Password=sign_up_details.password,
                 SecretHash=Utils.compute_secret_hash(
-                    client_secret=self.client_secret,
                     user_name=sign_up_details.email,
                     client_id=self.user_pool_client_id,
                 ),
@@ -125,11 +123,6 @@ class AuthUsecase:
                 AuthParameters={
                     'USERNAME': login_details.email,
                     'PASSWORD': login_details.password,
-                    'SECRET_HASH': Utils.compute_secret_hash(
-                        client_secret=self.client_secret,
-                        user_name=login_details.email,
-                        client_id=self.user_pool_client_id,
-                    ),
                 },
             )
 
@@ -207,11 +200,6 @@ class AuthUsecase:
                 AuthFlow='REFRESH_TOKEN_AUTH',
                 AuthParameters={
                     'REFRESH_TOKEN': refresh_token_request.refreshToken,
-                    'SECRET_HASH': Utils.compute_secret_hash(
-                        client_secret=self.client_secret,
-                        user_name=username,
-                        client_id=self.user_pool_client_id,
-                    ),
                 },
             )
 
@@ -301,11 +289,6 @@ class AuthUsecase:
             self.client.forgot_password(
                 ClientId=self.user_pool_client_id,
                 Username=email,
-                SecretHash=Utils.compute_secret_hash(
-                    client_secret=self.client_secret,
-                    user_name=email,
-                    client_id=self.user_pool_client_id,
-                ),
             )
         except Exception as e:
             err_msg = str(e)
@@ -336,11 +319,6 @@ class AuthUsecase:
             self.client.confirm_forgot_password(
                 ClientId=self.user_pool_client_id,
                 Username=change_password.email,
-                SecretHash=Utils.compute_secret_hash(
-                    client_secret=self.client_secret,
-                    user_name=change_password.email,
-                    client_id=self.user_pool_client_id,
-                ),
                 ConfirmationCode=change_password.confirmationCode,
                 Password=change_password.password,
             )
@@ -500,11 +478,7 @@ class AuthUsecase:
                 ChallengeResponses={
                     'USERNAME': update_temp_password.email,
                     'NEW_PASSWORD': update_temp_password.newPassword,
-                    'SECRET_HASH': Utils.compute_secret_hash(
-                        client_secret=self.client_secret,
-                        user_name=update_temp_password.email,
-                        client_id=self.user_pool_client_id,
-                    ),
+
                 },
             )
 

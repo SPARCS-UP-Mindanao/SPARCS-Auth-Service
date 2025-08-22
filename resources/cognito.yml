@@ -48,20 +48,18 @@ Resources:
         - profile
         - aws.cognito.signin.user.admin
       CallbackURLs:
-        - http://localhost:5173
-        - http://localhost:5173/
+        - ${self.custom.frontend_url}/signin/callback
       ExplicitAuthFlows:
         - ALLOW_ADMIN_USER_PASSWORD_AUTH
         - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_USER_SRP_AUTH
         - ALLOW_REFRESH_TOKEN_AUTH
-      LogoutURLs:
-        - http://localhost:5173
       PreventUserExistenceErrors: ENABLED
       UserPoolId: !Ref UserPool
       SupportedIdentityProviders:
         - COGNITO
         - Google
-      GenerateSecret: True
+      GenerateSecret: False
       RefreshTokenValidity: 180
 
   UserPoolDomain:
@@ -86,14 +84,14 @@ Resources:
       UserPoolId: !Ref UserPool
 
   GatewayResponse:
-    Type: 'AWS::ApiGateway::GatewayResponse'
+    Type: "AWS::ApiGateway::GatewayResponse"
     Properties:
       ResponseParameters:
         gatewayresponse.header.WWW-Authenticate: "'Basic'"
       ResponseType: UNAUTHORIZED
       RestApiId:
-        Ref: 'ApiGatewayRestApi'
-      StatusCode: '401'
+        Ref: "ApiGatewayRestApi"
+      StatusCode: "401"
 
   GoogleIdentityProvider:
     Type: AWS::Cognito::UserPoolIdentityProvider

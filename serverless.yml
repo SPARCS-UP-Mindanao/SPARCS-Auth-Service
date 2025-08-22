@@ -5,8 +5,7 @@ custom:
   serviceName: auth
   stage: ${opt:stage, self:provider.stage}
   entities: ${self:custom.stage}-${self:custom.projectName}-entities
-  emailQueue:
-    !ImportValue EmailQueue-${self:custom.stage}
+  emailQueue: !ImportValue EmailQueue-${self:custom.stage}
   frontendUrl:
     dev: ${ssm:/techtix/frontend-url-dev}
     staging: ${ssm:/techtix/frontend-url-staging}
@@ -44,7 +43,6 @@ provider:
     REGION: ${self:provider.region}
     STAGE: ${self:custom.stage}
     ENTITIES_TABLE: ${self:custom.entities}
-    CLIENT_SECRET_NAME: durianpy-auth-secret-key-${self:custom.stage}
     EMAIL_QUEUE: ${self:custom.emailQueue}
     FRONTEND_URL: ${self:custom.frontendUrl.${self:custom.stage}}
   logs:
@@ -83,7 +81,6 @@ resources:
         Value: !GetAtt ApiGatewayCloudWatchRole.Arn
         Export:
           Name: ApiGatewayCloudWatchRole-${self:custom.serviceName}-${self:custom.stage}
-
 
 functions:
   - ${file(resources/api.yml)}
