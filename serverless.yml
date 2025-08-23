@@ -6,14 +6,8 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   entities: ${self:custom.stage}-${self:custom.projectName}-entities
   emailQueue: !ImportValue EmailQueue-${self:custom.stage}
-  frontendUrl:
-    dev: ${ssm:/techtix/frontend-url-dev}
-    staging: ${ssm:/techtix/frontend-url-staging}
-    prod: ${ssm:/techtix/frontend-url-prod}
-  signinCallback:
-    dev: ${ssm:/techtix/cognito-signin-redirect-dev}
-    staging: ${ssm:/techtix/cognito-signin-redirect-staging}
-    prod: ${ssm:/techtix/cognito-signin-redirect-prod}
+  frontendUrl: ${ssm:/techtix/frontend-url-${self:custom.stage}}
+  signinCallback: ${ssm:/techtix/cognito-signin-redirect-${self:custom.stage}}
   createApiGatewayRole: ${env:CREATE_API_GW_ROLE, 'true'}
   pythonRequirements:
     dockerizePip: non-linux
