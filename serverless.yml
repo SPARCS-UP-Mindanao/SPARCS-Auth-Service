@@ -10,6 +10,10 @@ custom:
     dev: ${ssm:/techtix/frontend-url-dev}
     staging: ${ssm:/techtix/frontend-url-staging}
     prod: ${ssm:/techtix/frontend-url-prod}
+  signinCallback:
+    dev: ${ssm:/techtix/cognito-signin-redirect-dev}
+    staging: ${ssm:/techtix/cognito-signin-redirect-staging}
+    prod: ${ssm:/techtix/cognito-signin-redirect-prod}
   createApiGatewayRole: ${env:CREATE_API_GW_ROLE, 'true'}
   pythonRequirements:
     dockerizePip: non-linux
@@ -44,7 +48,7 @@ provider:
     STAGE: ${self:custom.stage}
     ENTITIES_TABLE: ${self:custom.entities}
     EMAIL_QUEUE: ${self:custom.emailQueue}
-    FRONTEND_URL: ${self:custom.frontendUrl.${self:custom.stage}}
+    FRONTEND_URL: ${self:custom.frontendUrl}
   logs:
     restApi:
       role: !GetAtt ApiGatewayCloudWatchRole.Arn
@@ -59,23 +63,23 @@ resources:
           AssumeRolePolicyDocument:
             Version: "2012-10-17"
             Statement:
-            - Effect: Allow
-              Principal:
-                Service: apigateway.amazonaws.com
-              Action: sts:AssumeRole
+              - Effect: Allow
+                Principal:
+                  Service: apigateway.amazonaws.com
+                Action: sts:AssumeRole
           Policies:
             - PolicyName: AllowCloudWatchLogs
               PolicyDocument:
                 Version: "2012-10-17"
                 Statement:
-                - Effect: Allow
-                  Action:
-                    - logs:CreateLogGroup
-                    - logs:CreateLogStream
-                    - logs:DescribeLogGroups
-                    - logs:DescribeLogStreams
-                    - logs:PutLogEvents
-                  Resource: "*"
+                  - Effect: Allow
+                    Action:
+                      - logs:CreateLogGroup
+                      - logs:CreateLogStream
+                      - logs:DescribeLogGroups
+                      - logs:DescribeLogStreams
+                      - logs:PutLogEvents
+                    Resource: "*"
     Outputs:
       ApiGatewayCloudWatchRoleArn:
         Value: !GetAtt ApiGatewayCloudWatchRole.Arn

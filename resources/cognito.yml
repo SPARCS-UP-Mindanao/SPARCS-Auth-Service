@@ -48,7 +48,7 @@ Resources:
         - profile
         - aws.cognito.signin.user.admin
       CallbackURLs:
-        - ${self.custom.frontend_url}/signin/callback
+        - ${self:custom.signinCallback}
       ExplicitAuthFlows:
         - ALLOW_ADMIN_USER_PASSWORD_AUTH
         - ALLOW_USER_PASSWORD_AUTH

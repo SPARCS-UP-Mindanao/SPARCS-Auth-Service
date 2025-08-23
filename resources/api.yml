@@ -46,11 +46,12 @@ app:
         - cognito-idp:AdminGetUser
         - cognito-idp:AdminDeleteUser
       Resource: "*"
-    # - Effect: Allow
-    #   Action:
-    #     - ssm:GetParameter
-    #   Resource:
-    #     - arn:aws:ssm:*:*:parameter/durianpy-auth-secret-key-${self:custom.stage}
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+      Resource:
+        - arn:aws:ssm:*:*:parameter/techtix-auth/signin-callback-${self:custom.stage}
+        - arn:aws:ssm:*:*:parameter/techtix/frontend-url-${self:custom.stage}
     - Effect: Allow
       Action:
         - dynamodb:*
