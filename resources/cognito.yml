@@ -106,8 +106,8 @@ Resources:
         picture: picture
         name: name
       ProviderDetails:
-        client_id: "{{resolve:ssm:/gcp/google-oauth-client-id:2}}"
-        client_secret: "{{resolve:ssm:/gcp/google-oauth-client-secret:2}}"
+        client_id: "{{resolve:ssm:/gcp/google-oauth-client-id}}"
+        client_secret: "{{resolve:ssm:/gcp/google-oauth-client-secret}}"
         authorize_scopes: "openid email profile phone"
 
 Outputs:
