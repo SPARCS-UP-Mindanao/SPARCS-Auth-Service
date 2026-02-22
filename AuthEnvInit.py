@@ -5,9 +5,9 @@ import boto3
 from botocore.exceptions import ClientError
 
 
-class EmailServiceConfigAssembler:
+class AuthServiceConfigAssembler:
     """
-    Assembles the Email Service config file
+    Assembles the Auth Service config file
     """
 
     def __init__(self, aws_region, environment):
@@ -71,12 +71,12 @@ class EmailServiceConfigAssembler:
         :param value: value of config
         :return: None
         """
-        entry = f'{key}={EmailServiceConfigAssembler.escape_env_value(str(value))}\n'
+        entry = f'{key}={AuthServiceConfigAssembler.escape_env_value(str(value))}\n'
         file_handle.write(entry)
 
     def construct_config_file(self) -> None:
         """
-        Constructs the config file for Email Service
+        Constructs the config file for Auth Service
 
         :return: None
         """
@@ -130,7 +130,7 @@ class EmailServiceConfigAssembler:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Email Service Configuration Assembler')
+    parser = argparse.ArgumentParser(description='Auth Service Configuration Assembler')
     parser.add_argument('-r', '--region', help='AWS Region (default: ap-southeast-1)')
     parser.add_argument('-s', '--stage', help='Environment Name (default: dev)')
     args = parser.parse_args()
@@ -139,5 +139,5 @@ if __name__ == '__main__':
     region = args.region
     input_stage = args.stage
 
-    config_assembler = EmailServiceConfigAssembler(region, input_stage)
+    config_assembler = AuthServiceConfigAssembler(region, input_stage)
     config_assembler.construct_config_file()
