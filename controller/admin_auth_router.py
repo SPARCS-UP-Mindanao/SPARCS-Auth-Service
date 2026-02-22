@@ -17,15 +17,15 @@ admin_auth_router = APIRouter()
 
 
 @admin_auth_router.post(
-    "/invite",
+    '/invite',
     response_model=SignUpResponse,
     responses={
         500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Register User",
+    summary='Register User',
 )
 @admin_auth_router.post(
-    "/invite/",
+    '/invite/',
     response_model=SignUpResponse,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -35,12 +35,24 @@ def invite_admin(
     invite_admin_request: AdminIn,
     current_user: AccessUser = Depends(get_current_user),
 ):
+    """
+    Invite a new admin to the system.
+
+    :param invite_admin_request: The details of the admin to invite.
+    :type invite_admin_request: AdminIn
+
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: Unauthorized if the current user is not an admin, otherwise the response to the sign-up request.
+    :rtype: JSONResponse
+    """
     _ = current_user
     if os.getenv('CURRENT_USER_IS_ADMIN', '') != 'True':
         return JSONResponse(
             status_code=HTTPStatus.UNAUTHORIZED,
             content={
-                "message": "Unauthorized",
+                'message': 'Unauthorized',
             },
         )
 
@@ -49,15 +61,15 @@ def invite_admin(
 
 
 @admin_auth_router.post(
-    "/update-password",
+    '/update-password',
     response_model=Message,
     responses={
         500: {'model': Message, 'description': 'Internal Server Error'},
     },
-    summary="Change Password",
+    summary='Change Password',
 )
 @admin_auth_router.post(
-    "/update-password/",
+    '/update-password/',
     response_model=Message,
     response_model_exclude_none=True,
     response_model_exclude_unset=True,
@@ -72,10 +84,10 @@ def update_temp_password(req: UpdateTemporaryPasswordRequest):
     '/current-user',
     response_model=AccessUser,
     responses={
-        404: {"model": Message, "description": "Admin not found"},
-        500: {"model": Message, "description": "Internal server error"},
+        404: {'model': Message, 'description': 'Admin not found'},
+        500: {'model': Message, 'description': 'Internal server error'},
     },
-    summary="Get Current user",
+    summary='Get Current user',
 )
 @admin_auth_router.get(
     '/current-user/',
@@ -87,6 +99,15 @@ def update_temp_password(req: UpdateTemporaryPasswordRequest):
 def get_current_user_admin(
     current_user: AccessUser = Depends(get_current_user),
 ):
+    """
+    Get information about the current user.
+
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: The current user.
+    :rtype: AccessUser
+    """
     return current_user
 
 
@@ -94,10 +115,10 @@ def get_current_user_admin(
     '',
     response_model=List[AdminOut],
     responses={
-        404: {"model": Message, "description": "Admin not found"},
-        500: {"model": Message, "description": "Internal server error"},
+        404: {'model': Message, 'description': 'Admin not found'},
+        500: {'model': Message, 'description': 'Internal server error'},
     },
-    summary="Get Admins",
+    summary='Get Admins',
 )
 @admin_auth_router.get(
     '/',
@@ -112,16 +133,16 @@ def get_admins(
     """
     Get a list of all admins in the current database.
 
-    Parameters:
-    - current_user (AccessUser): The currently authenticated user.
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
 
-    Returns:
-    - List[AdminOut]: A list of admin records.
+    :return: A list of admin records, otherwise an error message for unauthorized access.
+    :rtype: List[AdminOut] or JSONResponse
 
-    Responses:
-    - 200: List of admins retrieved successfully
-    - 404: Admin not found
-    - 500: Internal server error
+    :responses:
+        - 200: List of admins retrieved successfully
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
     if os.getenv('CURRENT_USER_IS_ADMIN') != 'True':
@@ -138,10 +159,10 @@ def get_admins(
     '/{entryId}',
     response_model=AdminOut,
     responses={
-        404: {"model": Message, "description": "Admin not found"},
-        500: {"model": Message, "description": "Internal server error"},
+        404: {'model': Message, 'description': 'Admin not found'},
+        500: {'model': Message, 'description': 'Internal server error'},
     },
-    summary="Get Admin",
+    summary='Get Admin',
 )
 @admin_auth_router.get(
     '/{entryId}/',
@@ -157,17 +178,19 @@ def get_admin(
     """
     Get details of a single admin from the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to retrieve.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to retrieve.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Details of the admin.
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
 
-    Responses:
-    - 200: Admin retrieved successfully
-    - 404: Admin not found
-    - 500: Internal server error
+    :return: The details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin retrieved successfully
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
     if os.getenv('CURRENT_USER_IS_ADMIN') != 'True':
@@ -184,11 +207,11 @@ def get_admin(
     '/{entryId}',
     response_model=AdminOut,
     responses={
-        400: {"model": Message, "description": "Bad request"},
-        404: {"model": Message, "description": "Admin not found"},
-        500: {"model": Message, "description": "Internal server error"},
+        400: {'model': Message, 'description': 'Bad request'},
+        404: {'model': Message, 'description': 'Admin not found'},
+        500: {'model': Message, 'description': 'Internal server error'},
     },
-    summary="Update Admin",
+    summary='Update Admin',
 )
 @admin_auth_router.put(
     '/{entryId}/',
@@ -205,19 +228,23 @@ def update_admin(
     """
     Update an admin's details in the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to update.
-    - admin (AdminIn): New details for the admin.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to update.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Updated details of the admin.
+    :param admin: New details for the admin.
+    :type admin: AdminIn
 
-    Responses:
-    - 200: Admin updated successfully
-    - 400: Bad request
-    - 404: Admin not found
-    - 500: Internal server error
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: Updated details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin updated successfully
+        - 400: Bad request
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
     if os.getenv('CURRENT_USER_IS_ADMIN') != 'True':
@@ -236,7 +263,7 @@ def update_admin(
     responses={
         204: {'description': 'Admin entry deletion success', 'content': None},
     },
-    summary="Delete Admin",
+    summary='Delete Admin',
 )
 @admin_auth_router.delete(
     '/{entryId}/',
@@ -250,19 +277,23 @@ def delete_admin(
     """
     Update an admin's details in the current database.
 
-    Parameters:
-    - entry_id (str): The ID of the admin to update.
-    - admin (AdminIn): New details for the admin.
-    - current_user (AccessUser): The currently authenticated user.
+    :param entry_id: The ID of the admin to update.
+    :type entry_id: str
 
-    Returns:
-    - AdminOut: Updated details of the admin.
+    :param admin: New details for the admin.
+    :type admin: AdminIn
 
-    Responses:
-    - 200: Admin updated successfully
-    - 400: Bad request
-    - 404: Admin not found
-    - 500: Internal server error
+    :param current_user: The currently authenticated user.
+    :type current_user: AccessUser
+
+    :return: Updated details of the admin, otherwise an error message for unauthorized access.
+    :rtype: AdminOut or JSONResponse
+
+    :responses:
+        - 200: Admin updated successfully
+        - 400: Bad request
+        - 404: Admin not found
+        - 500: Internal server error
     """
     _ = current_user
     if os.getenv('CURRENT_USER_IS_ADMIN') != 'True':

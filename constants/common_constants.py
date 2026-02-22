@@ -12,8 +12,8 @@ class EntryStatus(str, Enum):
 
 
 class CommonConstants:
-    DOMAIN_NAME = 'sparcsup.com'
-    TEMPORARY_PASSWORD = 'Sparcsup123#'
+    DOMAIN_NAME = 'durianpy.org'
+    TEMPORARY_PASSWORD = 'Durianpy123#'
 
     # DB Constants
     CLS = 'cls'
@@ -49,6 +49,8 @@ class CommonConstants:
 
 class EmailType(str, Enum):
     REGISTRATION_EMAIL = 'registrationEmail'
+    PREREGISTRATION_EMAIL = 'preRegistrationEmail'
     CONFIRMATION_EMAIL = 'confirmationEmail'
     EVALUATION_EMAIL = 'evaluationEmail'
     EVENT_CREATION_EMAIL = 'eventCreationEmail'
+    ADMIN_INVITATION_EMAIL = 'adminInvitationEmail'

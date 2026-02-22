@@ -14,11 +14,28 @@ class AccessUser(BaseModel):
 
 
 __auth = Cognito(
-    region=os.environ['REGION'], userPoolId=os.environ['USER_POOL_ID'], client_id=os.environ['USER_POOL_CLIENT_ID']
+    region=os.environ['REGION'],
+    userPoolId=os.environ['USER_POOL_ID'],
+    client_id=os.environ['USER_POOL_CLIENT_ID'],
 )
 
 
-def get_current_user(current_user: AccessUser = Depends(__auth.claim(AccessUser))) -> AccessUser:
+def get_current_user(
+    current_user: AccessUser = Depends(__auth.claim(AccessUser)),
+) -> AccessUser:
+    """
+    Retrieves information about the current user, such as their UUID (referred to as 'sub') and the groups they belong
+    to, and stores this information in environment variables.
+
+    :param current_user: An object representing the current user.
+    :type current_user: AccessUser
+
+    :raises HTTPException: The user is not authenticated.
+
+    :return: The current user.
+    :rtype: AccessUser
+    """
+
     if not current_user.username:
         raise HTTPException(status_code=401, detail='Invalid access token')
 

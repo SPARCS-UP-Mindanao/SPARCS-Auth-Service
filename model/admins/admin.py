@@ -58,16 +58,16 @@ class AdminIn(BaseModel):
     class Config:
         extra = Extra.forbid  # Prevents extra fields from being inputted
 
-    email: EmailStr = Field(None, title="Email")
-    firstName: str = Field(None, title="First Name")
-    lastName: str = Field(None, title="Last Name")
-    position: str = Field(None, title="Position")
-    address: str = Field(None, title="Address")
-    contactNumber: str = Field(None, title="Contact Number")
+    email: EmailStr = Field(None, title='Email')
+    firstName: str = Field(None, title='First Name')
+    lastName: str = Field(None, title='Last Name')
+    position: str = Field(None, title='Position')
+    address: str = Field(None, title='Address')
+    contactNumber: str = Field(None, title='Contact Number')
 
 
 class AdminPatch(AdminIn):
-    isConfirmed: bool = Field(default=False, title="Is Confirmed")
+    isConfirmed: bool = Field(default=False, title='Is Confirmed')
 
 
 class AdminOut(AdminIn):
@@ -85,9 +85,9 @@ class AdminOut(AdminIn):
     class Config:
         extra = Extra.ignore  # Ignores extra fields
 
-    entryId: str = Field(..., title="ID")
-    createDate: datetime = Field(..., title="Created At")
-    updateDate: datetime = Field(..., title="Updated At")
-    createdBy: str = Field(None, title="Created By")
-    updatedBy: str = Field(None, title="Updated By")
-    isConfirmed: bool = Field(default=False, title="Is Confirmed")
+    entryId: str = Field(..., title='ID')
+    createDate: datetime = Field(..., title='Created At')
+    updateDate: datetime = Field(..., title='Updated At')
+    createdBy: str = Field(None, title='Created By')
+    updatedBy: str = Field(None, title='Updated By')
+    isConfirmed: bool = Field(default=False, title='Is Confirmed')

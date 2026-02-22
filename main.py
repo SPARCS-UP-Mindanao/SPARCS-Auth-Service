@@ -12,20 +12,20 @@ root_path = f'/{STAGE}' if STAGE else '/'
 
 app = FastAPI(
     root_path=root_path,
-    title="SPARCS Auth Service",
+    title='DurianPy Auth Service',
     contact={
-        "name": "Society of Programmers and Refined Computer Scientists",
-        "email": "contact@sparcsup.com",
+        'name': 'Society of Programmers and Refined Computer Scientists',
+        'email': 'contact@durianpy.org',
     },
 )
 
 
-@app.get("/", include_in_schema=False)
+@app.get('/', include_in_schema=False)
 def welcome():
     html_content = """
     <html>
         <head>
-            <title>Welcome to the SPARCS Auth API</title>
+            <title>Welcome to the DURIANPY Auth API</title>
         </head>
         <body>
             <h1>Welcome to the Auth API</h1>

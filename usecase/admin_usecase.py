@@ -24,11 +24,14 @@ class AdminUseCase:
         """
         Create a new Admin entity.
 
-        Parameters:
-        - admin_in (AdminIn): The input data for creating the Admin entity.
+        :param admin_in: The input data for creating the Admin entity.
+        :type admin_in: AdminIn
 
-        Returns:
-        - Union[JSONResponse, AdminOut]: A JSON response or the created Admin entity.
+        :param sub: The sub of the user.
+        :type sub: str
+
+        :return: A JSON response or the created Admin entity.
+        :rtype: JSON
         """
         status, admin, message = self.__admins_repository.store_admin(admin_in=admin_in, sub=sub)
         if status != HTTPStatus.OK:
@@ -41,12 +44,14 @@ class AdminUseCase:
         """
         Update an existing Admin entity.
 
-        Parameters:
-        - admin_id (str): The ID of the Admin entity to update.
-        - admin_in (AdminIn): The updated data for the Admin entity.
+        :param admin_id: The ID of the Admin entity to update.
+        :type admin_id: str
 
-        Returns:
-        - Union[JSONResponse, AdminOut]: A JSON response or the updated Admin entity.
+        :param admin_in: The updated data for the Admin entity.
+        :type admin_in: AdminIn
+
+        :return: A JSON response or the updated Admin entity.
+        :rtype: JSON or AdminOut
         """
         status, admin, message = self.__admins_repository.query_admins(admin_id)
         if status != HTTPStatus.OK:
@@ -63,11 +68,11 @@ class AdminUseCase:
         """
         Retrieve an Admin entity by ID.
 
-        Parameters:
-        - admin_id (str): The ID of the Admin entity to retrieve.
+        :param admin_id: The ID of the Admin entity to retrieve.
+        :type admin_id: str
 
-        Returns:
-        - Union[JSONResponse, AdminOut]: A JSON response or the retrieved Admin entity.
+        :return: A JSON response or the retrieved Admin entity.
+        :rtype: JSON or AdminOut
         """
         status, admin, message = self.__admins_repository.query_admins(admin_id)
         if status != HTTPStatus.OK:
@@ -80,8 +85,8 @@ class AdminUseCase:
         """
         Retrieve a list of all Admin entities.
 
-        Returns:
-        - Union[JSONResponse, List[AdminOut]]: A JSON response or a list of retrieved Admin entities.
+        :return: A JSON response or a list of retrieved Admin entities.
+        :rtype: JSON or List[AdminOut]
         """
         status, admins, message = self.__admins_repository.query_admins()
         if status is not HTTPStatus.OK:
@@ -94,11 +99,11 @@ class AdminUseCase:
         """
         Delete an Admin entity by ID.
 
-        Parameters:
-        - admin_id (str): The ID of the Admin entity to delete.
+        :param admin_id: The ID of the Admin entity to delete.
+        :type admin_id: str
 
-        Returns:
-        - Union[None, JSONResponse]: A JSON response or None if the deletion is successful.
+        :return: A JSON response or None if the deletion is successful.
+        :rtype: JSON or None
         """
         status, admin, message = self.__admins_repository.query_admins(admin_id)
         if status != HTTPStatus.OK:
@@ -115,10 +120,10 @@ class AdminUseCase:
         """
         Convert a data entry to a dictionary.
 
-        Parameters:
-        - data_entry: The data entry to convert.
+        :param data_entry: The data entry to convert.
+        :type data_entry: Any
 
-        Returns:
-        - dict: The converted data as a dictionary.
+        :return: The converted data as a dictionary.
+        :rtype: dict
         """
         return json.loads(data_entry.to_json())

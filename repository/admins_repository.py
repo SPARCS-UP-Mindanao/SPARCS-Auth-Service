@@ -5,7 +5,6 @@ from datetime import datetime
 from http import HTTPStatus
 from typing import List, Tuple
 
-import ulid
 from pynamodb.connection import Connection
 from pynamodb.exceptions import (
     DeleteError,
@@ -45,12 +44,14 @@ class AdminsRepository:
         """
         Store an Admin entity in the database.
 
-        Parameter:
-        - admin_in (AdminIn): The data for the Admin entity.
+        :param admin_in: The data for the Admin entity.
+        :type admin_in: AdminIn
 
-        Returns:
-        - Tuple[HTTPStatus, Admin, str]: A tuple containing HTTP status, the stored Admin entity, and an error message if any.
+        :param sub: The ID of the Admin entity.
+        :type sub: str
 
+        :return: A tuple containing HTTP status, the stored Admin entity, and an error message if any.
+        :rtype: Tuple[HTTPStatus, Admin, str]
         """
         data = RepositoryUtils.load_data(pydantic_schema_in=admin_in)
         range_key = f'v{self.latest_version}#{sub}'
@@ -89,12 +90,11 @@ class AdminsRepository:
         """
         Query Admin entities from the database.
 
-        Parameter:
-        - admin_id (str, optional): The ID of the Admin entity to query.
+        :param admin_id: The ID of the Admin entity to query.
+        :type admin_id: str
 
-        Returns:
-        - Tuple[HTTPStatus, List[Admin], str]: A tuple containing HTTP status, a list of queried Admin entities, and an error message if any.
-
+        :return: A tuple containing HTTP status, a list of queried Admin entities, and an error message if any.
+        :rtype: Tuple[HTTPStatus, List[Admin], str]
         """
         try:
             if admin_id:
@@ -153,13 +153,14 @@ class AdminsRepository:
         """
         Update an Admin entity in the database.
 
-        Parameters:
-        - admin_entry (Admin): The existing Admin entity to update.
-        - admin_in (AdminIn): The new data for the Admin entity.
+        :param admin_entry: The existing Admin entity to update.
+        :type admin_entry: Admin
 
-        Returns:
-        - Tuple[HTTPStatus, Admin, str]: A tuple containing HTTP status, the updated Admin entity, and an error message if any.
+        :param admin_in: The new data for the Admin entity.
+        :type admin_in: AdminIn
 
+        :return: A tuple containing HTTP status, the updated Admin entity, and an error message if any.
+        :rtype: Tuple[HTTPStatus, Admin, str]
         """
         current_version = admin_entry.latestVersion
         new_version = current_version + 1
@@ -202,13 +203,13 @@ class AdminsRepository:
         """
         Delete an Admin entity in the database.
 
-        Parameter:
-        - admin_entry (Admin): The Admin entity to delete.
+        :param admin_entry: The Admin entity to delete.
+        :type admin_entry: Admin
 
-        Returns:
-        - Tuple[HTTPStatus, str]: A tuple containing HTTP status and an error message if any.
-
+        :return: A tuple containing HTTP status and an error message if any.
+        :rtype: Tuple[HTTPStatus, str]
         """
+
         try:
             # create new entry with old data
             current_version = admin_entry.latestVersion
