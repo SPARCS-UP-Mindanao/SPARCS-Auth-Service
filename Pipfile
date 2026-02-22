@@ -17,6 +17,7 @@ ulid = "==1.1"
 fastapi-cloudauth = "==0.4.3"
 pydantic = {version = "<2", extras = ["email"]}
 lambda-decorators = "==0.6.0"
+boto3 = "*"
 
 [dev-packages]
 boto3 = "==1.22.7"
