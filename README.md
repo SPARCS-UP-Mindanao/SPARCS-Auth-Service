@@ -1,5 +1,5 @@
 </p>
-<h1>DURIANPY Auth Service</h1>
+<h1>SPARCS Auth Service</h1>
 <p>A serverless REST API implemented with Clean Architecture and Domain Driven Design</p>
 
 ## Architecture
