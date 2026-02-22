@@ -110,6 +110,30 @@ Resources:
         client_secret: "{{resolve:ssm:/gcp/google-oauth-client-secret}}"
         authorize_scopes: "openid email profile phone"
 
+  UserPoolIdSSMParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /techtix/cognito-user-pool-id-${self:custom.stage}
+      Type: String
+      Value: !Ref UserPool
+      Description: Cognito User Pool ID for ${self:custom.stage} stage
+
+  UserPoolClientIdSSMParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /techtix/cognito-app-client-id-${self:custom.stage}
+      Type: String
+      Value: !Ref UserPoolClient
+      Description: Cognito User Pool Client ID for ${self:custom.stage} stage
+
+  CognitoDomainUrlSSMParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /techtix/cognito-domain-url-${self:custom.stage}
+      Type: String
+      Value: !Sub "https://${UserPoolDomain}.auth.${AWS::Region}.amazoncognito.com"
+      Description: Cognito User Pool Domain URL for ${self:custom.stage} stage
+
 Outputs:
   UserPoolId:
     Value: !Ref UserPool
