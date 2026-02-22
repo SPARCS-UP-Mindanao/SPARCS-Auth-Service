@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   deploy-dev:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
+    if: ${{ github.event.workflow_run.head_branch == 'main' }}
     runs-on: ubuntu-latest
     environment: dev
 
@@ -48,7 +48,7 @@ jobs:
         run: sls deploy --stage dev --verbose
 
   deploy-prod:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'release/') }}
+    if: ${{ startsWith(github.event.workflow_run.head_branch, 'release/') }}
     runs-on: ubuntu-latest
     environment: prod
 
