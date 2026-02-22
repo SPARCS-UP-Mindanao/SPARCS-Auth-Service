@@ -1,7 +1,7 @@
-service: durianpy-auth-service
+service: sparcs-auth-service
 
 custom:
-  projectName: durianpy-events
+  projectName: sparcs-events
   serviceName: auth
   stage: ${opt:stage, self:provider.stage}
   entities: ${self:custom.stage}-${self:custom.projectName}-entities
@@ -16,7 +16,7 @@ custom:
       - boto3
       - botocore
     layer:
-      name: durianpy-auth-${self:custom.stage}-python-requirements
+      name: ${self:custom.projectName}-${self:custom.serviceName}-${self:custom.stage}-python-requirements
       compatibleRuntimes:
         - python3.8
     slim: true

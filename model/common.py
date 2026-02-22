@@ -8,5 +8,5 @@ class Message(BaseModel):
 
 
 class BasicAuthCredentials(str, Enum):
-    username: str = 'durianpy'
-    password: str = 'durianpy_events_123!'
+    username: str = 'sparcs'
+    password: str = 'sparcs_events_123!'

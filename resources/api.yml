@@ -56,9 +56,9 @@ app:
       Action:
         - dynamodb:*
       Resource:
-        - arn:aws:dynamodb:ap-southeast-1:${aws:accountId}:table/${self:custom.stage}-durianpy-events-entities
+        - arn:aws:dynamodb:ap-southeast-1:${aws:accountId}:table/${self:custom.stage}-${self:custom.projectName}-entities
     - Effect: Allow
       Action:
         - "sqs:*"
       Resource:
-        - arn:aws:sqs:ap-southeast-1:${aws:accountId}:${self:custom.stage}-durianpy-events-email-queue.fifo
+        - arn:aws:sqs:ap-southeast-1:${aws:accountId}:${self:custom.stage}-${self:custom.projectName}-events-email-queue.fifo

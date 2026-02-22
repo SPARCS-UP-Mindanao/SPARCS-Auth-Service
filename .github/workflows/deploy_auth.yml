@@ -1,4 +1,4 @@
-name: Deploy DURIANPY Auth Service
+name: Deploy SPARCS Auth Service
 on:
     push:
         branches:
