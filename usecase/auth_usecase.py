@@ -50,10 +50,6 @@ class AuthUsecase:
                 ClientId=self.user_pool_client_id,
                 Username=sign_up_details.email,
                 Password=sign_up_details.password,
-                SecretHash=Utils.compute_secret_hash(
-                    user_name=sign_up_details.email,
-                    client_id=self.user_pool_client_id,
-                ),
             )
             sub = auth_response['UserSub']
             res = SignUpResponse(
@@ -82,11 +78,6 @@ class AuthUsecase:
         """
         try:
             self.client.confirm_sign_up(
-                SecretHash=Utils.compute_secret_hash(
-                    client_secret=self.client_secret,
-                    user_name=confirm_signup.email,
-                    client_id=self.user_pool_client_id,
-                ),
                 Username=confirm_signup.email,
                 ClientId=self.user_pool_client_id,
                 ConfirmationCode=confirm_signup.confirmationCode,
