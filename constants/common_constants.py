@@ -13,7 +13,7 @@ class EntryStatus(str, Enum):
 
 class CommonConstants:
     DOMAIN_NAME = 'sparcsup.com'
-    TEMPORARY_PASSWORD = 'Sparcs#'
+    TEMPORARY_PASSWORD = 'Sparcs123#'
 
     # DB Constants
     CLS = 'cls'
