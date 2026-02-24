@@ -121,7 +121,7 @@ Resources:
   UserPoolClientIdSSMParameter:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: /techtix/cognito-app-client-id-${self:custom.stage}
+      Name: /techtix/cognito-user-pool-client-id-${self:custom.stage}
       Type: String
       Value: !Ref UserPoolClient
       Description: Cognito User Pool Client ID for ${self:custom.stage} stage
