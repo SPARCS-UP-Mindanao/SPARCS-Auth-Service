@@ -74,6 +74,21 @@ resources:
                       - logs:DescribeLogStreams
                       - logs:PutLogEvents
                     Resource: "*"
+      AuthServiceApiEndpointParameter:
+        Type: AWS::SSM::Parameter
+        Properties:
+          Name: /techtix/auth-api-url-${self:custom.stage}
+          Type: String
+          Value:
+            Fn::Join:
+              - ""
+              - - "https://"
+                - Ref: ApiGatewayRestApi
+                - ".execute-api."
+                - ${self:provider.region}
+                - ".amazonaws.com/"
+                - ${self:custom.stage}
+
     Outputs:
       ApiGatewayCloudWatchRoleArn:
         Value: !GetAtt ApiGatewayCloudWatchRole.Arn
