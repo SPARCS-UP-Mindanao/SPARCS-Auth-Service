@@ -61,4 +61,4 @@ app:
       Action:
         - "sqs:*"
       Resource:
-        - arn:aws:sqs:ap-southeast-1:${aws:accountId}:${self:custom.stage}-${self:custom.projectName}-events-email-queue.fifo
+        - arn:aws:sqs:ap-southeast-1:${aws:accountId}:${self:custom.stage}-${self:custom.projectName}-email-queue.fifo
