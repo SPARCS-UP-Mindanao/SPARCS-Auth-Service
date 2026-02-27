@@ -9,45 +9,19 @@ This project follows the [clean architecture style](http://blog.thedigitalcatonl
 
 _Image credit to [Thang Chung under MIT terms](https://github.com/thangchung/blog-core)_
 
-# Setting Up Dev Containers
+## Setting Up Dev Containers
 
-This project uses **VS Code Dev Containers** to provide a consistent environment. You can use **Docker Desktop** or **WSL + Docker**.
+This project uses **VS Code Dev Containers** to provide a consistent environment.
 
 ---
 
-## Option A – Docker Desktop
-
-1. Install Docker Desktop: [Docker Windows Install Guide](https://docs.docker.com/desktop/setup/install/windows-install/)  
+1. First, Install Docker Desktop: [Docker Windows Install Guide](https://docs.docker.com/desktop/setup/install/windows-install/)  
 2. Start Docker Desktop and wait for **“Docker Desktop is running”**  
 3. Open the project in VS Code → it connects automatically  
-4. Rebuild/start the Dev Container:  
-5. To Start/Rebuild Dev Container, do `Ctrl + Shift + P` and press `Dev Containers: Rebuild Container` 
+4. Wait for a prompt to Rebuild/Start the Dev Container, else:  
+5. Start/Rebuild Dev Container by doing `Ctrl + Shift + P` and press `Dev Containers: Rebuild Container` 
 6. To verify, the terminal inside the Dev Container should look similar to this: `root ➜ /workspaces/TechTix (main) $`
-7. Then, install dependencies using `npm run dev`
-
-
-## Option B (WSL + Docker)
-This method provides the best performance by running Docker natively within the Linux kernel.
-
-1. Prerequisites
-  - Ensure WSL 2 is installed and updated on your Windows machine.
-  - A Linux distribution (like Ubuntu) should be set as your default.
-2. Install Docker Engine inside WSL by running these commands: 
-```
-# Update packages and install Docker
-sudo apt update && sudo apt upgrade -y
-sudo apt install docker.io -y
-
-# Manage permissions (allows running docker without 'sudo')
-sudo usermod -aG docker $USER
-
-# Start the Docker service
-sudo service docker start
-```
-- Then, restart WSL and open the project in VSCode
-- To Start/Rebuild Dev Container, do `Ctrl + Shift + P` and press `Dev Containers: Rebuild Container` 
-- To verify, the terminal inside the Dev Container should look similar to this: `root ➜ /workspaces/TechTix (main) $`
-- Then, Run the following to start your development server 
+7. Then, install dependencies and run localhost using 
 ```
 npm run install && npm run dev
 ```
