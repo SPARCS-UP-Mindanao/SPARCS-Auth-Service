@@ -371,9 +371,6 @@ class AuthUsecase:
         """
         try:
             response = self.client.admin_get_user(UserPoolId=self.user_pool_id, Username=username)
-        except self.client.exceptions.UserNotFoundException:
-            # User doesn't exist - this is expected when checking before creating a new user
-            return None
         except Exception as e:
             err_msg = str(e)
             logging.error(err_msg)

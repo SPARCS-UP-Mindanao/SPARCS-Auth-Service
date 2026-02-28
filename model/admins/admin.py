@@ -29,8 +29,8 @@ class Admin(Entities, discriminator='Admin'):
         - billing_mode (str): The billing mode for the database table (e.g., 'PAY_PER_REQUEST').
         """
 
-        table_name = os.environ['ENTITIES_TABLE']
-        region = os.environ['REGION']
+        table_name = os.getenv('ENTITIES_TABLE')
+        region = os.getenv('REGION')
         billing_mode = 'PAY_PER_REQUEST'
 
     email = UnicodeAttribute(null=True)

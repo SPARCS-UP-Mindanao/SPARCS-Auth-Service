@@ -38,7 +38,7 @@ class AdminsRepository:
         self.core_obj = 'Admin'
         self.current_date = datetime.utcnow().isoformat()
         self.latest_version = 0
-        self.conn = Connection(region=os.environ['REGION'])
+        self.conn = Connection(region=os.getenv('REGION'))
 
     def store_admin(self, admin_in: AdminIn, sub: str) -> Tuple[HTTPStatus, Admin, str]:
         """

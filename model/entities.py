@@ -10,8 +10,8 @@ from pynamodb.models import Model
 
 class Entities(Model):
     class Meta:
-        table_name = os.environ['ENTITIES_TABLE']
-        region = os.environ['REGION']
+        table_name = os.getenv('ENTITIES_TABLE')
+        region = os.getenv('REGION')
         billing_mode = 'PAY_PER_REQUEST'
 
     cls = DiscriminatorAttribute()
